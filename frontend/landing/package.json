@@ -13,6 +13,7 @@
     "test:coverage": "jest --coverage"
   },
   "dependencies": {
+    "@tailwindcss/typography": "^0.5.19",
     "axios": "^1.5.0",
     "clsx": "^2.0.0",
     "framer-motion": "^12.23.24",

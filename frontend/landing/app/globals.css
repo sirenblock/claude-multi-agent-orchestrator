@@ -94,3 +94,294 @@ body {
     @apply transform hover:-translate-y-1 transition-transform;
   }
 }
+
+/* Enhanced Blog Typography - Medium-style */
+@layer utilities {
+  .blog-content {
+    @apply antialiased;
+  }
+
+  /* Improve paragraph spacing in blog posts */
+  .prose p {
+    @apply mb-6 leading-8 text-gray-800;
+    font-size: 1.125rem;
+    word-spacing: 0.05em;
+  }
+
+  /* First paragraph styling - larger and more prominent with drop cap */
+  .prose > p:first-of-type {
+    @apply text-xl leading-relaxed text-gray-700;
+    font-weight: 400;
+    margin-bottom: 2rem;
+  }
+
+  /* Drop cap for first letter of first paragraph - Medium style */
+  .prose > p:first-of-type::first-letter {
+    @apply text-gray-900;
+    float: left;
+    font-size: 4.5rem;
+    line-height: 3.5rem;
+    padding-right: 0.5rem;
+    font-weight: 700;
+    margin-top: 0.1rem;
+  }
+
+  /* Headings hierarchy with proper spacing */
+  .prose h2 {
+    @apply mt-12 mb-6 scroll-mt-20;
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+  }
+
+  .prose h3 {
+    @apply mt-10 mb-4 scroll-mt-20;
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  .prose h4 {
+    @apply mt-8 mb-3 scroll-mt-20;
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.5;
+  }
+
+  /* Lists with better spacing */
+  .prose ul,
+  .prose ol {
+    @apply my-6 space-y-3;
+  }
+
+  .prose li {
+    @apply leading-7;
+    font-size: 1.125rem;
+  }
+
+  .prose li > p {
+    @apply my-2;
+  }
+
+  /* Nested lists */
+  .prose ul ul,
+  .prose ol ul,
+  .prose ul ol,
+  .prose ol ol {
+    @apply my-3;
+  }
+
+  /* Blockquotes - Medium style */
+  .prose blockquote {
+    @apply border-l-4 border-blue-500 pl-6 pr-4 py-2 my-8 italic;
+    font-size: 1.25rem;
+    line-height: 1.6;
+    color: #3a3a3a;
+    font-weight: 400;
+  }
+
+  .prose blockquote p {
+    @apply my-2;
+  }
+
+  /* Links - subtle underline on hover */
+  .prose a {
+    @apply text-blue-600 no-underline border-b border-blue-300 transition-colors duration-200;
+    font-weight: 500;
+  }
+
+  .prose a:hover {
+    @apply text-blue-700 border-blue-600;
+  }
+
+  /* Inline code */
+  .prose code {
+    @apply bg-gray-100 text-gray-900 px-2 py-1 rounded text-sm font-mono;
+    font-weight: 500;
+  }
+
+  /* Code blocks */
+  .prose pre {
+    @apply bg-gray-900 text-gray-100 rounded-lg p-6 my-8 overflow-x-auto;
+    font-size: 0.875rem;
+    line-height: 1.7;
+  }
+
+  .prose pre code {
+    @apply bg-transparent p-0 text-gray-100;
+  }
+
+  /* Tables */
+  .prose table {
+    @apply w-full my-8 text-sm;
+  }
+
+  .prose thead th {
+    @apply border-b-2 border-gray-300 pb-3 text-left font-semibold;
+  }
+
+  .prose tbody td {
+    @apply border-b border-gray-200 py-3;
+  }
+
+  /* Horizontal rules - section dividers */
+  .prose hr {
+    @apply border-gray-200 my-12;
+  }
+
+  /* Images with captions */
+  .prose img {
+    @apply rounded-lg my-8 shadow-md;
+  }
+
+  .prose figcaption {
+    @apply text-center text-sm text-gray-600 mt-3 italic;
+  }
+
+  /* Strong/Bold text */
+  .prose strong {
+    @apply font-semibold text-gray-900;
+  }
+
+  /* Emphasis/Italic */
+  .prose em {
+    @apply italic;
+  }
+
+  /* Pull quotes - Medium style highlighted quotes */
+  .prose .pullquote {
+    @apply text-2xl leading-relaxed font-normal text-gray-700 my-12 px-8 py-6 border-l-4 border-blue-500 bg-blue-50 italic relative;
+  }
+
+  .prose .pullquote::before {
+    content: '"';
+    @apply text-6xl text-blue-400 absolute -top-4 left-4 font-serif;
+  }
+
+  /* Enhanced unordered lists with custom bullets */
+  .prose ul > li {
+    @apply relative pl-7;
+  }
+
+  .prose ul > li::marker {
+    content: '';
+  }
+
+  .prose ul > li::before {
+    content: '●';
+    @apply absolute left-0 text-blue-500 font-bold;
+    font-size: 0.875rem;
+    line-height: 1.75rem;
+  }
+
+  /* Ordered lists with elegant numbering */
+  .prose ol > li {
+    @apply relative pl-8;
+  }
+
+  .prose ol {
+    counter-reset: list-counter;
+  }
+
+  .prose ol > li {
+    counter-increment: list-counter;
+  }
+
+  .prose ol > li::marker {
+    content: '';
+  }
+
+  .prose ol > li::before {
+    content: counter(list-counter) '.';
+    @apply absolute left-0 text-blue-600 font-semibold;
+  }
+
+  /* Highlight boxes / callouts */
+  .prose .callout {
+    @apply bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-500 rounded-r-lg p-6 my-6;
+  }
+
+  .prose .callout-info {
+    @apply bg-gradient-to-r from-blue-50 to-cyan-50 border-l-4 border-blue-500;
+  }
+
+  .prose .callout-warning {
+    @apply bg-gradient-to-r from-yellow-50 to-orange-50 border-l-4 border-yellow-500;
+  }
+
+  .prose .callout-success {
+    @apply bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500;
+  }
+
+  .prose .callout-error {
+    @apply bg-gradient-to-r from-red-50 to-pink-50 border-l-4 border-red-500;
+  }
+
+  /* Section dividers */
+  .prose .divider-fancy {
+    @apply flex items-center justify-center my-16;
+  }
+
+  .prose .divider-fancy::before,
+  .prose .divider-fancy::after {
+    content: '';
+    @apply flex-1 border-t border-gray-300;
+  }
+
+  .prose .divider-fancy::before {
+    @apply mr-4;
+  }
+
+  .prose .divider-fancy::after {
+    @apply ml-4;
+  }
+
+  /* Inline highlights */
+  .prose mark {
+    @apply bg-yellow-200 px-1 py-0.5 rounded;
+  }
+
+  /* Keyboard keys */
+  .prose kbd {
+    @apply bg-gray-100 border border-gray-300 rounded px-2 py-1 text-sm font-mono shadow-sm;
+  }
+
+  /* Lead paragraph class for manual use */
+  .prose .lead {
+    @apply text-xl text-gray-700 leading-relaxed mb-8;
+  }
+
+  /* Subtitle styling */
+  .prose .subtitle {
+    @apply text-lg text-gray-600 font-normal mt-2 mb-8;
+  }
+
+  /* Reading time badge */
+  .reading-time-badge {
+    @apply inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-700 rounded-full text-sm font-medium;
+  }
+
+  /* Tag badges */
+  .tag-badge {
+    @apply inline-flex items-center gap-1 px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200 transition-colors;
+  }
+
+  /* Author card enhancements */
+  .author-card {
+    @apply flex items-start gap-4 p-6 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-100;
+  }
+
+  .author-avatar-large {
+    @apply w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-xl shadow-lg;
+  }
+
+  /* Social share buttons */
+  .share-button {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition-all;
+  }
+
+  .share-button:hover {
+    @apply transform -translate-y-0.5 shadow-md;
+  }
+}
