@@ -215,3 +215,17 @@ This feature enables powerful voice transcription capabilities in your applicati
 *Have questions? Reach out to our support team or join our Discord community.*
   `.trim();
 }
+
+// Export blogPosts for compatibility
+export const blogPosts = sampleBlogPosts.map(post => ({
+  ...post,
+  readingTime: '5 min read',
+  content: getBlogPostContent(post.slug),
+  author: authors[post.author],
+  relatedPosts: [],
+}));
+
+// Get blog post by slug
+export function getBlogPostBySlug(slug: string) {
+  return blogPosts.find(post => post.slug === slug);
+}
