@@ -183,6 +183,9 @@ function Navigation() {
             <Link href="/docs" className="btn-ghost">
               Docs
             </Link>
+            <Link href="/blog" className="btn-ghost">
+              Blog
+            </Link>
             <a
               href="https://github.com/whisperapi/whisperapi"
               target="_blank"
