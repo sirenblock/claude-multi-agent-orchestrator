@@ -1,0 +1,777 @@
+---
+title: "WhisperAPI Quickstart Guide: From Zero to First Transcription in 5 Minutes"
+description: "A complete beginner-friendly tutorial to get started with WhisperAPI. Learn how to set up your account, make your first API call, and integrate speech-to-text into your applications using Python, Node.js, or JavaScript."
+date: "2025-01-15"
+author: "WhisperAPI Team"
+tags: ["tutorial", "quickstart", "getting started", "API", "documentation"]
+image: "/blog/whisperapi-quickstart.jpg"
+---
+
+# WhisperAPI Quickstart Guide: From Zero to First Transcription in 5 Minutes
+
+Getting started with speech recognition doesn't have to be complicated. In this tutorial, you'll go from complete beginner to successfully transcribing your first audio file in just five minutes. Whether you're building a podcast transcription service, adding voice notes to your app, or automating meeting transcriptions, this guide will get you up and running quickly.
+
+## What You'll Accomplish
+
+By the end of this tutorial, you'll have:
+- Created and configured your WhisperAPI account
+- Generated your first API key
+- Made a successful API call using curl
+- Implemented transcription in your preferred language (Python, Node.js, or JavaScript)
+- Understood common errors and how to fix them
+
+## Time Required
+
+Approximately 5-10 minutes for the basic setup and first API call. An additional 10-15 minutes if you want to implement all the language-specific examples.
+
+## Prerequisites
+
+- A valid email address for account creation
+- Basic familiarity with command line or terminal
+- A code editor if following language-specific examples
+- An audio file to test with (we'll provide sample files if you don't have one)
+
+## Step 1: Account Setup
+
+Creating your WhisperAPI account is straightforward and takes less than two minutes.
+
+### Sign Up Process
+
+1. **Visit the Registration Page**: Navigate to [whisperapi.com/signup](https://whisperapi.com/signup) in your web browser.
+
+2. **Enter Your Details**: Fill in the registration form with:
+   - Your email address (use a business email for better organization)
+   - A strong password (at least 12 characters with mixed case, numbers, and symbols)
+   - Your name and company (optional but helpful for team collaboration)
+
+3. **Verify Your Email**: Check your inbox for a verification email from WhisperAPI. Click the verification link within 24 hours to activate your account. If you don't see the email, check your spam folder or request a new verification email.
+
+4. **Complete Your Profile**: After verification, you'll be redirected to complete your profile setup. This includes:
+   - Setting your timezone for accurate usage reporting
+   - Choosing your preferred programming language (helps us customize your dashboard)
+   - Optionally joining our newsletter for API updates and tips
+
+### Dashboard Overview
+
+Once logged in, you'll see your dashboard with several key sections:
+
+- **API Keys Section**: Where you'll generate and manage your authentication keys
+- **Usage Metrics**: Real-time tracking of your API calls, transcription minutes, and costs
+- **Recent Transcriptions**: A history of your recent API calls with status and results
+- **Documentation Quick Links**: Fast access to guides, API reference, and code samples
+- **Billing Overview**: Current plan, usage limits, and payment methods
+
+### Billing Setup
+
+WhisperAPI offers a generous free tier to get started:
+- 60 minutes of free transcription per month
+- No credit card required for the free tier
+- Automatic email alerts at 50%, 75%, and 90% of your monthly quota
+
+To add a payment method for paid usage:
+1. Navigate to Settings → Billing
+2. Click "Add Payment Method"
+3. Enter your credit card details (processed securely via Stripe)
+4. Optionally set spending limits to control costs
+
+Your free tier minutes reset on the first day of each month.
+
+## Step 2: Generate Your API Key
+
+API keys are your authentication credentials for accessing WhisperAPI. Here's how to create and secure your first key.
+
+### Creating Your First Key
+
+1. From your dashboard, click on "API Keys" in the navigation menu
+2. Click the "Generate New Key" button
+3. Give your key a descriptive name (e.g., "Development", "Production App", or "Testing")
+4. Set permissions:
+   - **Read/Write**: Can transcribe audio and access results (recommended for most use cases)
+   - **Read Only**: Can only retrieve existing transcriptions (useful for frontend apps)
+5. Optionally set an expiration date for enhanced security
+6. Click "Create Key"
+
+**Important**: Your API key will be displayed only once. Copy it immediately and store it securely. If you lose the key, you'll need to generate a new one.
+
+### Security Best Practices
+
+Protecting your API key is crucial to prevent unauthorized usage and unexpected charges:
+
+**Do:**
+- Store keys in environment variables, never in source code
+- Use different keys for development, staging, and production
+- Rotate keys every 90 days for enhanced security
+- Set up spending limits in your account settings
+- Use read-only keys for client-side applications when possible
+
+**Don't:**
+- Commit API keys to version control (Git, SVN, etc.)
+- Share keys via email, Slack, or other messaging platforms
+- Use production keys in public repositories or demos
+- Hardcode keys in mobile apps or browser JavaScript
+
+### Environment Variables
+
+For local development, create a `.env` file in your project root:
+
+```bash
+WHISPER_API_KEY=your_api_key_here
+```
+
+Add `.env` to your `.gitignore` file to prevent accidental commits:
+
+```bash
+echo ".env" >> .gitignore
+```
+
+For production environments, use your platform's secret management:
+- **Heroku**: Config Vars in dashboard
+- **AWS**: Systems Manager Parameter Store or Secrets Manager
+- **Vercel/Netlify**: Environment Variables in project settings
+- **Docker**: Use `docker-compose` env files or Kubernetes secrets
+
+## Step 3: Your First API Call with curl
+
+Let's make your first transcription request using curl, a command-line tool available on most systems.
+
+### Basic curl Example
+
+Open your terminal and run this command (replace `YOUR_API_KEY` with your actual key):
+
+```bash
+curl -X POST https://api.whisperapi.com/v1/transcribe \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: multipart/form-data" \
+  -F "file=@/path/to/your/audio.mp3" \
+  -F "language=en"
+```
+
+If you don't have an audio file handy, download our sample file:
+
+```bash
+curl -O https://whisperapi.com/samples/sample-audio.mp3
+```
+
+Then transcribe it:
+
+```bash
+curl -X POST https://api.whisperapi.com/v1/transcribe \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: multipart/form-data" \
+  -F "file=@sample-audio.mp3" \
+  -F "language=en" \
+  -F "response_format=json"
+```
+
+### Understanding the Response
+
+A successful response looks like this:
+
+```json
+{
+  "id": "transcription_abc123",
+  "status": "completed",
+  "text": "This is the transcribed text from your audio file.",
+  "language": "en",
+  "duration": 12.5,
+  "segments": [
+    {
+      "start": 0.0,
+      "end": 5.2,
+      "text": "This is the transcribed text"
+    },
+    {
+      "start": 5.2,
+      "end": 12.5,
+      "text": "from your audio file."
+    }
+  ],
+  "created_at": "2025-01-15T10:30:00Z"
+}
+```
+
+Key fields explained:
+- **id**: Unique identifier for this transcription
+- **status**: Processing status (completed, processing, or failed)
+- **text**: Complete transcribed text
+- **duration**: Audio length in seconds
+- **segments**: Time-stamped text segments for precise playback synchronization
+
+### Common Errors
+
+**401 Unauthorized**
+```json
+{"error": "Invalid API key"}
+```
+Solution: Check that your API key is correct and properly formatted in the Authorization header.
+
+**400 Bad Request - Unsupported File Format**
+```json
+{"error": "File format not supported. Supported formats: mp3, wav, m4a, webm"}
+```
+Solution: Convert your audio to a supported format using ffmpeg or an online converter.
+
+**413 Payload Too Large**
+```json
+{"error": "File size exceeds maximum of 25MB"}
+```
+Solution: Compress your audio file or split it into smaller chunks.
+
+**429 Rate Limit Exceeded**
+```json
+{"error": "Rate limit exceeded. Try again in 60 seconds"}
+```
+Solution: Implement exponential backoff in your code or upgrade to a higher tier plan.
+
+## Step 4: Python Implementation
+
+Python is one of the most popular languages for working with APIs. Here's a complete implementation with best practices.
+
+### Install the SDK
+
+First, install the WhisperAPI Python SDK using pip:
+
+```bash
+pip install whisperapi-python
+```
+
+Or if you prefer using the requests library directly:
+
+```bash
+pip install requests
+```
+
+### Complete Code Example
+
+Create a file called `transcribe.py`:
+
+```python
+import os
+from whisperapi import WhisperAPI
+
+# Initialize the client with your API key from environment
+client = WhisperAPI(api_key=os.getenv('WHISPER_API_KEY'))
+
+def transcribe_audio(file_path, language='en'):
+    """
+    Transcribe an audio file using WhisperAPI
+
+    Args:
+        file_path: Path to the audio file
+        language: Language code (default: 'en')
+
+    Returns:
+        dict: Transcription result with text and metadata
+    """
+    try:
+        # Upload and transcribe the file
+        with open(file_path, 'rb') as audio_file:
+            result = client.transcribe(
+                file=audio_file,
+                language=language,
+                response_format='verbose_json',  # Include timestamps
+                temperature=0.0  # More deterministic output
+            )
+
+        print(f"Transcription completed successfully!")
+        print(f"Duration: {result['duration']} seconds")
+        print(f"Text: {result['text']}")
+
+        return result
+
+    except FileNotFoundError:
+        print(f"Error: File not found at {file_path}")
+        return None
+
+    except Exception as e:
+        print(f"Error during transcription: {str(e)}")
+        return None
+
+# Example usage
+if __name__ == "__main__":
+    result = transcribe_audio("sample-audio.mp3")
+
+    # Print timestamped segments
+    if result and 'segments' in result:
+        print("\nTimestamped segments:")
+        for segment in result['segments']:
+            start = segment['start']
+            end = segment['end']
+            text = segment['text']
+            print(f"[{start:.2f}s - {end:.2f}s]: {text}")
+```
+
+### Error Handling Best Practices
+
+Enhance your code with robust error handling:
+
+```python
+from whisperapi import WhisperAPI, WhisperAPIError
+import time
+
+def transcribe_with_retry(file_path, max_retries=3):
+    """Transcribe with automatic retry logic"""
+    client = WhisperAPI(api_key=os.getenv('WHISPER_API_KEY'))
+
+    for attempt in range(max_retries):
+        try:
+            with open(file_path, 'rb') as audio_file:
+                result = client.transcribe(file=audio_file)
+            return result
+
+        except WhisperAPIError as e:
+            if e.status_code == 429:  # Rate limit
+                wait_time = (2 ** attempt) * 1  # Exponential backoff
+                print(f"Rate limited. Waiting {wait_time}s...")
+                time.sleep(wait_time)
+                continue
+            else:
+                raise
+
+    raise Exception(f"Failed after {max_retries} attempts")
+```
+
+### Running Your Script
+
+Make sure your environment variable is set:
+
+```bash
+export WHISPER_API_KEY=your_api_key_here
+python transcribe.py
+```
+
+## Step 5: Node.js Implementation
+
+For JavaScript developers working with Node.js, here's how to integrate WhisperAPI.
+
+### Install the SDK
+
+Using npm:
+
+```bash
+npm install whisperapi-node
+```
+
+Or using yarn:
+
+```bash
+yarn add whisperapi-node
+```
+
+### Complete Code Example
+
+Create `transcribe.js`:
+
+```javascript
+const WhisperAPI = require('whisperapi-node');
+const fs = require('fs');
+require('dotenv').config();
+
+// Initialize client
+const client = new WhisperAPI({
+  apiKey: process.env.WHISPER_API_KEY
+});
+
+async function transcribeAudio(filePath, options = {}) {
+  try {
+    // Read the audio file
+    const fileStream = fs.createReadStream(filePath);
+
+    // Transcribe with options
+    const result = await client.transcribe({
+      file: fileStream,
+      language: options.language || 'en',
+      responseFormat: 'verbose_json',
+      temperature: 0.0
+    });
+
+    console.log('Transcription completed!');
+    console.log(`Duration: ${result.duration} seconds`);
+    console.log(`Text: ${result.text}`);
+
+    return result;
+
+  } catch (error) {
+    console.error('Transcription error:', error.message);
+
+    if (error.statusCode === 401) {
+      console.error('Invalid API key. Check your credentials.');
+    } else if (error.statusCode === 429) {
+      console.error('Rate limit exceeded. Please try again later.');
+    }
+
+    throw error;
+  }
+}
+
+// Example with async/await
+async function main() {
+  try {
+    const result = await transcribeAudio('sample-audio.mp3', {
+      language: 'en'
+    });
+
+    // Print timestamped segments
+    if (result.segments) {
+      console.log('\nTimestamped segments:');
+      result.segments.forEach(segment => {
+        console.log(
+          `[${segment.start.toFixed(2)}s - ${segment.end.toFixed(2)}s]: ${segment.text}`
+        );
+      });
+    }
+
+  } catch (error) {
+    console.error('Failed to transcribe:', error.message);
+    process.exit(1);
+  }
+}
+
+main();
+```
+
+### Async/Await Patterns
+
+For processing multiple files concurrently:
+
+```javascript
+async function transcribeMultipleFiles(filePaths) {
+  const promises = filePaths.map(filePath =>
+    transcribeAudio(filePath).catch(err => ({
+      filePath,
+      error: err.message
+    }))
+  );
+
+  const results = await Promise.all(promises);
+
+  // Separate successful and failed transcriptions
+  const successful = results.filter(r => !r.error);
+  const failed = results.filter(r => r.error);
+
+  console.log(`Completed: ${successful.length}/${results.length}`);
+
+  return { successful, failed };
+}
+```
+
+### Integration Tips
+
+For Express.js applications:
+
+```javascript
+const express = require('express');
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
+
+app.post('/transcribe', upload.single('audio'), async (req, res) => {
+  try {
+    const result = await transcribeAudio(req.file.path);
+    res.json({ success: true, transcription: result });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+```
+
+## Step 6: JavaScript (Browser) Implementation
+
+For client-side web applications, here's how to implement file upload and transcription.
+
+### Client-Side Upload
+
+Create an HTML file with upload functionality:
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <title>WhisperAPI Browser Demo</title>
+  <style>
+    .upload-container {
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      border: 2px dashed #ccc;
+      border-radius: 10px;
+    }
+    .progress-bar {
+      width: 100%;
+      height: 30px;
+      background: #f0f0f0;
+      border-radius: 5px;
+      overflow: hidden;
+      display: none;
+    }
+    .progress-fill {
+      height: 100%;
+      background: #4CAF50;
+      transition: width 0.3s;
+    }
+  </style>
+</head>
+<body>
+  <div class="upload-container">
+    <h2>Audio Transcription</h2>
+    <input type="file" id="audioFile" accept="audio/*">
+    <button onclick="transcribeAudio()">Transcribe</button>
+
+    <div class="progress-bar" id="progressBar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <div id="result" style="margin-top: 20px;"></div>
+  </div>
+
+  <script src="transcribe.js"></script>
+</body>
+</html>
+```
+
+### Progress Tracking
+
+Create `transcribe.js`:
+
+```javascript
+const API_KEY = 'YOUR_API_KEY'; // In production, get this from your backend
+const API_URL = 'https://api.whisperapi.com/v1/transcribe';
+
+async function transcribeAudio() {
+  const fileInput = document.getElementById('audioFile');
+  const progressBar = document.getElementById('progressBar');
+  const progressFill = document.getElementById('progressFill');
+  const resultDiv = document.getElementById('result');
+
+  if (!fileInput.files.length) {
+    alert('Please select an audio file');
+    return;
+  }
+
+  const file = fileInput.files[0];
+
+  // Validate file size (25MB limit)
+  if (file.size > 25 * 1024 * 1024) {
+    alert('File size must be less than 25MB');
+    return;
+  }
+
+  // Show progress bar
+  progressBar.style.display = 'block';
+  progressFill.style.width = '0%';
+  resultDiv.innerHTML = 'Uploading...';
+
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('language', 'en');
+  formData.append('response_format', 'json');
+
+  try {
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${API_KEY}`
+      },
+      body: formData
+    });
+
+    // Update progress
+    progressFill.style.width = '100%';
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Transcription failed');
+    }
+
+    const result = await response.json();
+    displayResult(result);
+
+  } catch (error) {
+    resultDiv.innerHTML = `
+      <div style="color: red;">
+        Error: ${error.message}
+      </div>
+    `;
+  } finally {
+    setTimeout(() => {
+      progressBar.style.display = 'none';
+    }, 1000);
+  }
+}
+
+function displayResult(result) {
+  const resultDiv = document.getElementById('result');
+
+  let html = `
+    <h3>Transcription Result</h3>
+    <p><strong>Duration:</strong> ${result.duration.toFixed(2)} seconds</p>
+    <p><strong>Text:</strong></p>
+    <div style="background: #f5f5f5; padding: 15px; border-radius: 5px;">
+      ${result.text}
+    </div>
+  `;
+
+  if (result.segments) {
+    html += '<h4>Timestamped Segments:</h4><ul>';
+    result.segments.forEach(segment => {
+      html += `
+        <li>
+          [${segment.start.toFixed(2)}s - ${segment.end.toFixed(2)}s]:
+          ${segment.text}
+        </li>
+      `;
+    });
+    html += '</ul>';
+  }
+
+  resultDiv.innerHTML = html;
+}
+```
+
+### Security Considerations
+
+**Important**: Never expose your API key in client-side code for production applications. Instead:
+
+1. **Create a Backend Proxy**: Route requests through your server
+
+```javascript
+// Frontend code
+async function transcribeAudio() {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  // Call your backend instead of WhisperAPI directly
+  const response = await fetch('/api/transcribe', {
+    method: 'POST',
+    body: formData
+  });
+}
+
+// Backend code (Node.js/Express)
+app.post('/api/transcribe', upload.single('file'), async (req, res) => {
+  // Your API key stays secure on the server
+  const result = await whisperClient.transcribe({
+    file: req.file
+  });
+  res.json(result);
+});
+```
+
+2. **Use Temporary Tokens**: Generate short-lived tokens from your backend
+3. **Implement Rate Limiting**: Prevent abuse on your proxy endpoint
+4. **Validate Files**: Check file types and sizes before uploading
+
+## Step 7: Common Errors and Solutions
+
+Here are the most frequently encountered errors and their solutions.
+
+### Authentication Errors
+
+**Error**: `401 Unauthorized - Invalid API key`
+
+Solutions:
+- Verify your API key is correct (check for extra spaces or line breaks)
+- Ensure you're using the correct header format: `Authorization: Bearer YOUR_KEY`
+- Check if your API key has expired or been revoked
+- Confirm your account is active and in good standing
+
+### File Format Issues
+
+**Error**: `400 Bad Request - Unsupported file format`
+
+Supported formats: MP3, WAV, M4A, FLAC, OGG, WebM
+
+Solutions:
+- Convert your file using ffmpeg: `ffmpeg -i input.mp4 -vn -acodec mp3 output.mp3`
+- Use online converters like CloudConvert or Zamzar
+- Check that your file extension matches the actual format
+
+### Rate Limiting
+
+**Error**: `429 Too Many Requests`
+
+Solutions:
+- Implement exponential backoff in your retry logic
+- Spread out your requests over time
+- Upgrade to a higher tier plan for increased limits
+- Cache transcription results to avoid re-processing
+
+### Timeout Handling
+
+**Error**: `504 Gateway Timeout`
+
+This typically happens with very large files or during high traffic periods.
+
+Solutions:
+- Split large files into smaller chunks (recommended: 10-15 minute segments)
+- Increase your HTTP client timeout settings
+- Implement webhook callbacks for long-running transcriptions
+- Use the async API endpoint for files over 10 minutes
+
+## Step 8: Next Steps
+
+Congratulations! You've successfully set up WhisperAPI and made your first transcriptions. Here's what to explore next.
+
+### Advanced Features
+
+**Speaker Diarization**: Identify different speakers in your audio
+```python
+result = client.transcribe(
+    file=audio_file,
+    enable_speaker_diarization=True,
+    num_speakers=2  # If known
+)
+```
+
+**Custom Vocabulary**: Improve accuracy for domain-specific terms
+```python
+result = client.transcribe(
+    file=audio_file,
+    custom_vocabulary=['API', 'webhook', 'authentication']
+)
+```
+
+**Translation**: Transcribe and translate simultaneously
+```python
+result = client.transcribe(
+    file=audio_file,
+    task='translate',  # Translate to English
+    source_language='es'
+)
+```
+
+### Production Deployment
+
+Before going live, consider:
+
+1. **Error Handling**: Implement comprehensive error handling and logging
+2. **Monitoring**: Set up alerts for failed transcriptions and API errors
+3. **Caching**: Store results to avoid redundant processing
+4. **Webhooks**: Use callbacks for asynchronous processing
+5. **Load Testing**: Test your integration under expected traffic loads
+
+### Scaling Tips
+
+As your usage grows:
+
+- **Batch Processing**: Process multiple files concurrently for better throughput
+- **Queue System**: Use Redis or RabbitMQ for managing transcription jobs
+- **CDN Integration**: Store audio files on a CDN for faster uploads
+- **Database Design**: Index transcriptions by user, date, and status for quick retrieval
+- **Cost Optimization**: Implement audio compression and silence removal
+
+### Resources
+
+- **API Reference**: [docs.whisperapi.com/reference](https://docs.whisperapi.com/reference)
+- **SDK Documentation**: Language-specific guides and examples
+- **Community Forum**: Ask questions and share tips with other developers
+- **Status Page**: Monitor API uptime and performance
+- **Support**: Email support@whisperapi.com for assistance
+
+## Conclusion
+
+You now have everything you need to integrate speech recognition into your applications. Start with the basic examples in this guide, then gradually explore advanced features as your needs grow. The WhisperAPI team is constantly adding new capabilities, so check the changelog regularly for updates.
+
+Happy transcribing!

@@ -1,0 +1,737 @@
+---
+title: "WhisperAPI Integration: Complete Developer Guide"
+description: "A comprehensive technical guide to integrating WhisperAPI into your applications, covering authentication, SDKs, webhooks, error handling, and production deployment best practices."
+date: "2024-01-20"
+author: "WhisperAPI Team"
+tags: ["developer-guide", "integration", "api", "webhooks", "best-practices"]
+---
+
+# WhisperAPI Integration: Complete Developer Guide
+
+Integrating speech-to-text capabilities into your application doesn't have to be complex. This comprehensive guide walks you through everything you need to know to successfully implement WhisperAPI in your production environment. Whether you're building a transcription service, adding voice features to your app, or processing audio at scale, this guide covers authentication, SDK usage, webhook setup, error handling, and production deployment strategies. By the end, you'll have a solid foundation for building reliable, scalable audio transcription features.
+
+## Authentication
+
+Proper authentication is the foundation of secure API integration. WhisperAPI uses API key-based authentication with Bearer tokens to ensure your requests are secure and authorized.
+
+### Generating Your API Key
+
+After signing up for WhisperAPI, navigate to your dashboard to generate your first API key. Each key is unique to your account and should be treated as a password:
+
+1. Go to Dashboard → API Keys
+2. Click "Generate New Key"
+3. Provide a descriptive name (e.g., "Production Server" or "Development Environment")
+4. Copy the key immediately - it's only shown once
+5. Store it securely using a secrets management system
+
+### Using Bearer Tokens
+
+WhisperAPI uses the industry-standard Bearer token authentication scheme. Include your API key in the Authorization header of every request:
+
+```bash
+curl https://api.whisperapi.com/v1/transcribe \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -F "file=@audio.mp3"
+```
+
+The Bearer token scheme is simple, widely supported, and works across all programming languages and HTTP clients.
+
+### API Key Security Best Practices
+
+Never hardcode API keys in your source code. Instead, use environment variables:
+
+```javascript
+// ❌ Bad - hardcoded key
+const apiKey = "wsk_live_abc123...";
+
+// ✅ Good - environment variable
+const apiKey = process.env.WHISPER_API_KEY;
+```
+
+Additional security recommendations:
+
+- **Rotate keys regularly**: Update keys every 90 days or after team member departures
+- **Use separate keys for each environment**: Different keys for development, staging, and production
+- **Implement key rotation without downtime**: Generate a new key before revoking the old one
+- **Monitor key usage**: Set up alerts for unusual activity patterns
+- **Restrict key permissions**: Use read-only keys where write access isn't needed
+- **Never log API keys**: Ensure logging systems mask or exclude authentication headers
+
+### Managing Multiple Environments
+
+Create separate API keys for different environments to maintain isolation and security:
+
+```bash
+# .env.development
+WHISPER_API_KEY=wsk_dev_abc123...
+WHISPER_WEBHOOK_SECRET=whsec_dev_xyz789...
+
+# .env.production
+WHISPER_API_KEY=wsk_live_def456...
+WHISPER_WEBHOOK_SECRET=whsec_live_uvw012...
+```
+
+This separation allows you to:
+- Track usage per environment
+- Revoke compromised keys without affecting production
+- Test new features safely
+- Monitor costs separately
+
+### Key Rotation Strategy
+
+Implement zero-downtime key rotation by supporting multiple active keys simultaneously:
+
+```python
+# Support both old and new keys during rotation
+API_KEYS = [
+    os.getenv('WHISPER_API_KEY_PRIMARY'),
+    os.getenv('WHISPER_API_KEY_SECONDARY')  # Remove after rotation complete
+]
+
+def get_active_key():
+    return API_KEYS[0]  # Use primary key for new requests
+```
+
+## SDK Documentation
+
+WhisperAPI provides official SDKs for the most popular programming languages, making integration straightforward and idiomatic for your tech stack.
+
+### Python SDK
+
+The Python SDK is perfect for data science workflows, backend services, and automation scripts.
+
+**Installation:**
+
+```bash
+pip install whisperapi
+```
+
+**Basic Usage:**
+
+```python
+from whisperapi import WhisperClient
+
+# Initialize client
+client = WhisperClient(api_key=os.getenv('WHISPER_API_KEY'))
+
+# Transcribe an audio file
+with open('audio.mp3', 'rb') as audio_file:
+    result = client.transcribe(
+        file=audio_file,
+        language='en',
+        model='whisper-large-v3'
+    )
+
+print(result.text)
+print(f"Confidence: {result.confidence}")
+print(f"Duration: {result.duration}s")
+```
+
+**Advanced Features:**
+
+```python
+# Transcribe with timestamps
+result = client.transcribe(
+    file=audio_file,
+    timestamps=True,
+    word_level=True
+)
+
+for segment in result.segments:
+    print(f"[{segment.start}s - {segment.end}s]: {segment.text}")
+
+# Async transcription with webhook
+job = client.transcribe_async(
+    file=audio_file,
+    webhook_url='https://yourapp.com/webhooks/transcription'
+)
+
+print(f"Job ID: {job.id}")
+```
+
+**Error Handling:**
+
+```python
+from whisperapi.exceptions import (
+    AuthenticationError,
+    RateLimitError,
+    TranscriptionError
+)
+
+try:
+    result = client.transcribe(file=audio_file)
+except AuthenticationError:
+    print("Invalid API key")
+except RateLimitError as e:
+    print(f"Rate limited. Retry after {e.retry_after}s")
+except TranscriptionError as e:
+    print(f"Transcription failed: {e.message}")
+```
+
+### Node.js SDK
+
+The Node.js SDK is ideal for web applications, serverless functions, and real-time services.
+
+**Installation:**
+
+```bash
+npm install @whisperapi/sdk
+# or
+yarn add @whisperapi/sdk
+```
+
+**Basic Usage:**
+
+```javascript
+import { WhisperClient } from '@whisperapi/sdk';
+import fs from 'fs';
+
+const client = new WhisperClient({
+  apiKey: process.env.WHISPER_API_KEY
+});
+
+// Transcribe audio file
+const audioFile = fs.createReadStream('audio.mp3');
+const result = await client.transcribe({
+  file: audioFile,
+  language: 'en',
+  model: 'whisper-large-v3'
+});
+
+console.log(result.text);
+console.log(`Confidence: ${result.confidence}`);
+```
+
+**Async Transcription:**
+
+```javascript
+// Start async job
+const job = await client.transcribeAsync({
+  file: audioFile,
+  webhookUrl: 'https://yourapp.com/webhooks/transcription'
+});
+
+console.log(`Job ID: ${job.id}`);
+
+// Poll for results (alternative to webhooks)
+const checkStatus = async (jobId) => {
+  const status = await client.getJob(jobId);
+
+  if (status.state === 'completed') {
+    return status.result;
+  } else if (status.state === 'failed') {
+    throw new Error(status.error);
+  }
+
+  // Still processing
+  await new Promise(resolve => setTimeout(resolve, 5000));
+  return checkStatus(jobId);
+};
+
+const finalResult = await checkStatus(job.id);
+```
+
+**TypeScript Support:**
+
+```typescript
+import { WhisperClient, TranscriptionResult } from '@whisperapi/sdk';
+
+const result: TranscriptionResult = await client.transcribe({
+  file: audioFile,
+  language: 'en'
+});
+```
+
+### Ruby SDK
+
+The Ruby SDK integrates seamlessly with Rails applications and Ruby scripts.
+
+**Installation:**
+
+```ruby
+gem install whisper_api
+```
+
+**Basic Usage:**
+
+```ruby
+require 'whisper_api'
+
+client = WhisperAPI::Client.new(
+  api_key: ENV['WHISPER_API_KEY']
+)
+
+# Transcribe audio
+result = client.transcribe(
+  file: File.open('audio.mp3'),
+  language: 'en'
+)
+
+puts result.text
+puts "Confidence: #{result.confidence}"
+```
+
+**Rails Integration:**
+
+```ruby
+# config/initializers/whisper_api.rb
+WhisperAPI.configure do |config|
+  config.api_key = ENV['WHISPER_API_KEY']
+  config.timeout = 30
+  config.max_retries = 3
+end
+
+# app/services/transcription_service.rb
+class TranscriptionService
+  def self.transcribe(audio_file)
+    client = WhisperAPI::Client.new
+    client.transcribe(file: audio_file)
+  rescue WhisperAPI::RateLimitError => e
+    # Queue for retry
+    TranscriptionJob.set(wait: e.retry_after.seconds)
+                    .perform_later(audio_file.id)
+  end
+end
+```
+
+## Webhook Setup
+
+Webhooks enable real-time notifications when transcription jobs complete, allowing your application to respond immediately without polling.
+
+### Why Use Webhooks?
+
+Webhooks offer several advantages over polling:
+
+- **Real-time updates**: Receive notifications instantly when jobs complete
+- **Reduced API calls**: No need to repeatedly check job status
+- **Lower latency**: Process results as soon as they're ready
+- **Better resource utilization**: Your servers don't waste cycles polling
+- **Scalability**: Handle thousands of concurrent jobs efficiently
+
+### Creating a Webhook Endpoint
+
+Your webhook endpoint receives POST requests with transcription results:
+
+```javascript
+// Express.js example
+app.post('/webhooks/transcription', express.json(), async (req, res) => {
+  // Verify webhook signature (see next section)
+  const isValid = verifyWebhookSignature(req);
+
+  if (!isValid) {
+    return res.status(401).json({ error: 'Invalid signature' });
+  }
+
+  // Process the transcription result
+  const { job_id, status, result, error } = req.body;
+
+  if (status === 'completed') {
+    await processTranscription(job_id, result);
+  } else if (status === 'failed') {
+    await handleTranscriptionError(job_id, error);
+  }
+
+  // Acknowledge receipt immediately
+  res.status(200).json({ received: true });
+});
+```
+
+### Signature Verification
+
+Always verify webhook signatures to ensure requests come from WhisperAPI:
+
+```javascript
+const crypto = require('crypto');
+
+function verifyWebhookSignature(req) {
+  const signature = req.headers['x-whisper-signature'];
+  const timestamp = req.headers['x-whisper-timestamp'];
+  const payload = JSON.stringify(req.body);
+
+  // Prevent replay attacks (reject requests older than 5 minutes)
+  const currentTime = Math.floor(Date.now() / 1000);
+  if (Math.abs(currentTime - timestamp) > 300) {
+    return false;
+  }
+
+  // Compute expected signature
+  const signedPayload = `${timestamp}.${payload}`;
+  const expectedSignature = crypto
+    .createHmac('sha256', process.env.WHISPER_WEBHOOK_SECRET)
+    .update(signedPayload)
+    .digest('hex');
+
+  // Constant-time comparison to prevent timing attacks
+  return crypto.timingSafeEqual(
+    Buffer.from(signature),
+    Buffer.from(expectedSignature)
+  );
+}
+```
+
+### Webhook Payload Structure
+
+WhisperAPI sends structured JSON payloads:
+
+```json
+{
+  "event": "transcription.completed",
+  "job_id": "job_abc123",
+  "timestamp": 1705795200,
+  "status": "completed",
+  "result": {
+    "text": "Hello world, this is a test transcription.",
+    "confidence": 0.98,
+    "duration": 3.5,
+    "language": "en",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 3.5,
+        "text": "Hello world, this is a test transcription."
+      }
+    ]
+  }
+}
+```
+
+### Testing Webhooks Locally
+
+Use tools like ngrok to test webhooks during development:
+
+```bash
+# Start ngrok tunnel
+ngrok http 3000
+
+# Use the ngrok URL as your webhook endpoint
+# https://abc123.ngrok.io/webhooks/transcription
+```
+
+Alternatively, use WhisperAPI's webhook testing tool in the dashboard to send test payloads.
+
+### Webhook Retry Logic
+
+WhisperAPI automatically retries failed webhook deliveries:
+
+- **Retry schedule**: Exponential backoff (1s, 5s, 25s, 2m, 10m)
+- **Maximum retries**: 5 attempts
+- **Success criteria**: HTTP 2xx response within 30 seconds
+- **Timeout**: 30-second connection timeout
+
+Design your endpoint to be idempotent since you may receive duplicate events.
+
+## Error Handling
+
+Robust error handling is essential for production applications. WhisperAPI uses standard HTTP status codes and detailed error messages.
+
+### Error Code Reference
+
+| Status Code | Error Type | Description | Action |
+|------------|------------|-------------|--------|
+| 400 | `invalid_request` | Malformed request or invalid parameters | Check request format |
+| 401 | `authentication_failed` | Invalid or missing API key | Verify API key |
+| 403 | `permission_denied` | Insufficient permissions | Check account status |
+| 404 | `resource_not_found` | Job or resource doesn't exist | Verify resource ID |
+| 413 | `file_too_large` | Audio file exceeds size limit | Compress or split file |
+| 422 | `unsupported_format` | Audio format not supported | Convert to supported format |
+| 429 | `rate_limit_exceeded` | Too many requests | Implement backoff |
+| 500 | `server_error` | WhisperAPI server error | Retry with backoff |
+| 503 | `service_unavailable` | Temporary service disruption | Retry with backoff |
+
+### Retry Strategies
+
+Implement exponential backoff for transient errors:
+
+```python
+import time
+import random
+
+def transcribe_with_retry(client, audio_file, max_retries=5):
+    for attempt in range(max_retries):
+        try:
+            return client.transcribe(file=audio_file)
+        except RateLimitError as e:
+            if attempt == max_retries - 1:
+                raise
+
+            # Use retry-after header if provided
+            wait_time = e.retry_after or (2 ** attempt) + random.uniform(0, 1)
+            time.sleep(wait_time)
+        except ServerError as e:
+            if attempt == max_retries - 1:
+                raise
+
+            # Exponential backoff with jitter
+            wait_time = (2 ** attempt) + random.uniform(0, 1)
+            time.sleep(wait_time)
+```
+
+### Circuit Breaker Pattern
+
+Prevent cascading failures by implementing a circuit breaker:
+
+```javascript
+class CircuitBreaker {
+  constructor(threshold = 5, timeout = 60000) {
+    this.failureThreshold = threshold;
+    this.resetTimeout = timeout;
+    this.failures = 0;
+    this.state = 'CLOSED'; // CLOSED, OPEN, HALF_OPEN
+    this.nextAttempt = Date.now();
+  }
+
+  async execute(fn) {
+    if (this.state === 'OPEN') {
+      if (Date.now() < this.nextAttempt) {
+        throw new Error('Circuit breaker is OPEN');
+      }
+      this.state = 'HALF_OPEN';
+    }
+
+    try {
+      const result = await fn();
+      this.onSuccess();
+      return result;
+    } catch (error) {
+      this.onFailure();
+      throw error;
+    }
+  }
+
+  onSuccess() {
+    this.failures = 0;
+    this.state = 'CLOSED';
+  }
+
+  onFailure() {
+    this.failures++;
+    if (this.failures >= this.failureThreshold) {
+      this.state = 'OPEN';
+      this.nextAttempt = Date.now() + this.resetTimeout;
+    }
+  }
+}
+```
+
+### Logging Best Practices
+
+Implement structured logging for debugging and monitoring:
+
+```python
+import logging
+import json
+
+logger = logging.getLogger(__name__)
+
+def log_api_request(method, endpoint, duration, status_code, error=None):
+    log_data = {
+        'method': method,
+        'endpoint': endpoint,
+        'duration_ms': duration,
+        'status_code': status_code,
+        'timestamp': datetime.utcnow().isoformat()
+    }
+
+    if error:
+        log_data['error'] = str(error)
+        logger.error(json.dumps(log_data))
+    else:
+        logger.info(json.dumps(log_data))
+```
+
+## Rate Limiting
+
+Understanding and properly handling rate limits ensures your application runs smoothly under all conditions.
+
+### Rate Limit Headers
+
+WhisperAPI includes rate limit information in response headers:
+
+```
+X-RateLimit-Limit: 1000
+X-RateLimit-Remaining: 847
+X-RateLimit-Reset: 1705795200
+```
+
+Monitor these headers to proactively manage your request rate:
+
+```javascript
+function checkRateLimit(response) {
+  const limit = parseInt(response.headers['x-ratelimit-limit']);
+  const remaining = parseInt(response.headers['x-ratelimit-remaining']);
+  const reset = parseInt(response.headers['x-ratelimit-reset']);
+
+  if (remaining < limit * 0.1) {
+    const resetTime = new Date(reset * 1000);
+    console.warn(`Approaching rate limit. Resets at ${resetTime}`);
+  }
+
+  return { limit, remaining, reset };
+}
+```
+
+### Handling 429 Errors
+
+When you receive a 429 status, respect the `Retry-After` header:
+
+```javascript
+async function transcribeWithRateLimit(client, audioFile) {
+  try {
+    return await client.transcribe({ file: audioFile });
+  } catch (error) {
+    if (error.status === 429) {
+      const retryAfter = parseInt(error.headers['retry-after']);
+      console.log(`Rate limited. Retrying in ${retryAfter}s`);
+      await sleep(retryAfter * 1000);
+      return transcribeWithRateLimit(client, audioFile);
+    }
+    throw error;
+  }
+}
+```
+
+### Queuing Strategies
+
+Implement a queue system to handle traffic spikes:
+
+```python
+from queue import Queue
+import threading
+
+class TranscriptionQueue:
+    def __init__(self, client, max_workers=5):
+        self.client = client
+        self.queue = Queue()
+        self.workers = []
+
+        for _ in range(max_workers):
+            worker = threading.Thread(target=self._process_queue)
+            worker.daemon = True
+            worker.start()
+            self.workers.append(worker)
+
+    def enqueue(self, audio_file, callback):
+        self.queue.put((audio_file, callback))
+
+    def _process_queue(self):
+        while True:
+            audio_file, callback = self.queue.get()
+            try:
+                result = self.client.transcribe(file=audio_file)
+                callback(result=result)
+            except Exception as error:
+                callback(error=error)
+            finally:
+                self.queue.task_done()
+```
+
+### Batch Processing
+
+Process multiple files efficiently while respecting rate limits:
+
+```javascript
+async function batchTranscribe(files, rateLimit = 10) {
+  const results = [];
+
+  for (let i = 0; i < files.length; i += rateLimit) {
+    const batch = files.slice(i, i + rateLimit);
+    const batchResults = await Promise.all(
+      batch.map(file => transcribeWithRetry(file))
+    );
+    results.push(...batchResults);
+
+    // Wait before next batch
+    if (i + rateLimit < files.length) {
+      await sleep(1000);
+    }
+  }
+
+  return results;
+}
+```
+
+## Production Deployment
+
+Deploying to production requires careful planning around scalability, monitoring, and security.
+
+### Environment Configuration
+
+Use environment-specific configurations:
+
+```yaml
+# config/production.yml
+whisper_api:
+  api_key: ${WHISPER_API_KEY}
+  base_url: https://api.whisperapi.com/v1
+  timeout: 30
+  max_retries: 3
+  webhook_secret: ${WHISPER_WEBHOOK_SECRET}
+
+monitoring:
+  enable_metrics: true
+  log_level: info
+  alert_on_errors: true
+```
+
+### Scaling Considerations
+
+Design for horizontal scalability:
+
+- **Stateless architecture**: Don't store transcription state in application memory
+- **Job queues**: Use Redis, RabbitMQ, or SQS for asynchronous processing
+- **Load balancing**: Distribute webhook traffic across multiple instances
+- **Database connection pooling**: Efficiently manage database connections
+- **Caching**: Cache frequently accessed results using Redis or Memcached
+
+### Monitoring and Alerts
+
+Implement comprehensive monitoring:
+
+```javascript
+const metrics = {
+  transcriptionsStarted: 0,
+  transcriptionsCompleted: 0,
+  transcriptionsFailed: 0,
+  averageProcessingTime: 0,
+  rateLimitHits: 0
+};
+
+function recordMetric(metricName, value = 1) {
+  metrics[metricName] += value;
+
+  // Send to monitoring service (e.g., DataDog, CloudWatch)
+  monitoringService.increment(metricName, value);
+}
+
+// Set up alerts
+if (metrics.rateLimitHits > 100) {
+  alert('High rate limit hits - consider upgrading plan');
+}
+```
+
+### Performance Optimization
+
+Optimize for speed and efficiency:
+
+- **Connection pooling**: Reuse HTTP connections
+- **Parallel processing**: Process multiple files concurrently
+- **Streaming uploads**: Use streaming for large files to reduce memory usage
+- **Compression**: Enable gzip compression for API responses
+- **CDN delivery**: Serve audio files from a CDN when possible
+
+### Security Checklist
+
+Before going live, verify:
+
+- ✅ API keys stored in secure vault (AWS Secrets Manager, HashiCorp Vault)
+- ✅ Webhook signature verification implemented
+- ✅ HTTPS enforced for all webhook endpoints
+- ✅ Rate limiting on your own endpoints
+- ✅ Input validation for all user-provided data
+- ✅ Logging excludes sensitive information
+- ✅ Regular security audits scheduled
+- ✅ Dependency vulnerabilities monitored
+
+## Conclusion
+
+Integrating WhisperAPI into your application is straightforward when you follow best practices for authentication, error handling, and production deployment. Start with the SDK for your preferred language, implement webhook support for async operations, and use the patterns described here to build a robust, scalable transcription system. Monitor your usage, handle errors gracefully, and don't hesitate to reach out to support if you encounter issues. Happy coding!
