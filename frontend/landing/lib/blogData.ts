@@ -1,8 +1,12 @@
 /**
- * Sample blog post metadata
- * This file contains example blog posts for the blog system
- * In production, this would be replaced by actual MDX files in content/blog
+ * Blog post data loader
+ * Reads and parses MDX files from content/blog directory
  */
+
+import fs from 'fs';
+import path from 'path';
+import matter from 'gray-matter';
+import { marked } from 'marked';
 
 export interface Author {
   name: string;
@@ -14,20 +18,19 @@ export interface Author {
 }
 
 export const authors: Record<string, Author> = {
-  'john-doe': {
-    name: 'John Doe',
-    avatar: '/images/authors/john-doe.jpg',
+  'sarah-chen': {
+    name: 'Sarah Chen',
+    avatar: '/images/authors/sarah-chen.jpg',
     bio: 'Senior Developer Advocate at WhisperAPI. Passionate about AI and developer tools.',
-    twitter: '@johndoe',
-    github: 'johndoe',
-    linkedin: 'johndoe',
+    twitter: '@sarahchen',
+    github: 'sarahchen',
   },
-  'jane-smith': {
-    name: 'Jane Smith',
-    avatar: '/images/authors/jane-smith.jpg',
+  'mike-johnson': {
+    name: 'Mike Johnson',
+    avatar: '/images/authors/mike-johnson.jpg',
     bio: 'ML Engineer specializing in speech recognition and NLP.',
-    twitter: '@janesmith',
-    github: 'janesmith',
+    twitter: '@mikejohnson',
+    github: 'mikejohnson',
   },
   'whisperapi-team': {
     name: 'WhisperAPI Team',
@@ -38,194 +41,144 @@ export const authors: Record<string, Author> = {
   },
 };
 
-export const categories = [
-  'Product Updates',
-  'Tutorials',
-  'Best Practices',
-  'Case Studies',
-  'Technology',
-  'Company News',
-  'API Updates',
-];
+const contentDirectory = path.join(process.cwd(), 'content', 'blog');
 
-export const sampleBlogPosts = [
-  {
-    slug: 'introducing-whisperapi-v2',
-    title: 'Introducing WhisperAPI v2: Faster, More Accurate Speech Recognition',
-    excerpt: 'We\'re excited to announce WhisperAPI v2 with 40% faster processing, improved accuracy, and new language support.',
-    date: '2024-01-15',
-    author: 'whisperapi-team',
-    category: 'Product Updates',
-    tags: ['release', 'features', 'performance'],
-    coverImage: '/images/blog/whisperapi-v2.jpg',
-    published: true,
-  },
-  {
-    slug: 'building-voice-powered-apps',
-    title: 'Building Voice-Powered Applications with WhisperAPI',
-    excerpt: 'Learn how to build production-ready voice applications using WhisperAPI with this comprehensive guide.',
-    date: '2024-01-10',
-    author: 'john-doe',
-    category: 'Tutorials',
-    tags: ['tutorial', 'voice', 'development'],
-    coverImage: '/images/blog/voice-apps.jpg',
-    published: true,
-  },
-  {
-    slug: 'real-time-transcription-best-practices',
-    title: 'Real-Time Transcription: Best Practices and Optimization',
-    excerpt: 'Discover the best practices for implementing real-time transcription in your applications.',
-    date: '2024-01-05',
-    author: 'jane-smith',
-    category: 'Best Practices',
-    tags: ['real-time', 'optimization', 'performance'],
-    coverImage: '/images/blog/real-time-transcription.jpg',
-    published: true,
-  },
-  {
-    slug: 'how-acme-corp-scaled-voice-transcription',
-    title: 'How Acme Corp Scaled Voice Transcription to 1M+ Users',
-    excerpt: 'A deep dive into how Acme Corp used WhisperAPI to scale their voice transcription service.',
-    date: '2023-12-28',
-    author: 'john-doe',
-    category: 'Case Studies',
-    tags: ['case-study', 'scaling', 'enterprise'],
-    coverImage: '/images/blog/acme-corp-case-study.jpg',
-    published: true,
-  },
-  {
-    slug: 'understanding-speech-recognition-accuracy',
-    title: 'Understanding Speech Recognition Accuracy Metrics',
-    excerpt: 'A comprehensive guide to measuring and improving speech recognition accuracy.',
-    date: '2023-12-20',
-    author: 'jane-smith',
-    category: 'Technology',
-    tags: ['accuracy', 'metrics', 'ml'],
-    coverImage: '/images/blog/accuracy-metrics.jpg',
-    published: true,
-  },
-  {
-    slug: 'multilingual-support-expansion',
-    title: 'WhisperAPI Now Supports 50+ Languages',
-    excerpt: 'We\'ve expanded our language support to cover 50+ languages with native-level accuracy.',
-    date: '2023-12-15',
-    author: 'whisperapi-team',
-    category: 'Company News',
-    tags: ['languages', 'international', 'announcement'],
-    coverImage: '/images/blog/multilingual.jpg',
-    published: true,
-  },
-  {
-    slug: 'webhook-integration-guide',
-    title: 'Complete Guide to WhisperAPI Webhook Integration',
-    excerpt: 'Learn how to integrate webhooks for asynchronous transcription workflows.',
-    date: '2023-12-10',
-    author: 'john-doe',
-    category: 'Tutorials',
-    tags: ['webhooks', 'integration', 'async'],
-    coverImage: '/images/blog/webhooks.jpg',
-    published: true,
-  },
-  {
-    slug: 'api-security-best-practices',
-    title: 'API Security Best Practices for Speech-to-Text Services',
-    excerpt: 'Essential security practices for protecting your voice data and API keys.',
-    date: '2023-12-05',
-    author: 'jane-smith',
-    category: 'Best Practices',
-    tags: ['security', 'api', 'best-practices'],
-    coverImage: '/images/blog/security.jpg',
-    published: true,
-  },
-  {
-    slug: 'custom-vocabulary-support',
-    title: 'Introducing Custom Vocabulary Support',
-    excerpt: 'Improve transcription accuracy for industry-specific terms with custom vocabulary.',
-    date: '2023-11-30',
-    author: 'whisperapi-team',
-    category: 'API Updates',
-    tags: ['features', 'vocabulary', 'accuracy'],
-    coverImage: '/images/blog/custom-vocabulary.jpg',
-    published: true,
-  },
-];
+export interface BlogPost {
+  slug: string;
+  title: string;
+  excerpt?: string;
+  description?: string;
+  date: string;
+  publishedAt?: string;
+  updatedAt?: string;
+  author: Author;
+  authorName?: string;
+  category: string;
+  tags: string[];
+  image?: string;
+  coverImage?: string;
+  readingTime: string;
+  content: string;
+  relatedPosts: string[];
+  featured?: boolean;
+  published?: boolean;
+}
 
 /**
- * Get blog post content by slug
- * This would be replaced by actual MDX file reading in production
+ * Get all blog post files
+ */
+function getBlogFiles(): string[] {
+  try {
+    if (!fs.existsSync(contentDirectory)) {
+      console.warn(`Content directory not found: ${contentDirectory}`);
+      return [];
+    }
+    return fs.readdirSync(contentDirectory).filter((file) => file.endsWith('.mdx'));
+  } catch (error) {
+    console.error('Error reading blog files:', error);
+    return [];
+  }
+}
+
+/**
+ * Read and parse a single MDX file
+ */
+function parseBlogPost(filename: string): BlogPost | null {
+  try {
+    const slug = filename.replace(/\.mdx$/, '');
+    const filePath = path.join(contentDirectory, filename);
+    const fileContents = fs.readFileSync(filePath, 'utf8');
+    const { data, content } = matter(fileContents);
+
+    // Determine author
+    let author: Author;
+    const authorKey = data.author?.toLowerCase().replace(/\s+/g, '-') || 'whisperapi-team';
+    author = authors[authorKey] || authors['whisperapi-team'];
+
+    // If author name is provided but not in our authors list, create a temporary author
+    if (data.author && !authors[authorKey]) {
+      author = {
+        name: data.author,
+        avatar: data.authorImage || '/images/authors/default.jpg',
+        bio: data.authorTitle || 'Content contributor',
+      };
+    }
+
+    // Convert markdown content to HTML
+    const htmlContent = marked.parse(content, {
+      gfm: true,
+      breaks: true,
+    }) as string;
+
+    return {
+      slug,
+      title: data.title || 'Untitled',
+      excerpt: data.description || data.excerpt || '',
+      description: data.description || data.excerpt || '',
+      date: data.publishedAt || data.date || new Date().toISOString().split('T')[0],
+      publishedAt: data.publishedAt || data.date,
+      updatedAt: data.updatedAt,
+      author,
+      authorName: data.author,
+      category: data.category || 'General',
+      tags: data.tags || [],
+      image: data.image || data.coverImage || '/images/blog/default.jpg',
+      coverImage: data.image || data.coverImage,
+      readingTime: data.readingTime || calculateReadingTime(content),
+      content: htmlContent,
+      relatedPosts: data.relatedPosts || [],
+      featured: data.featured || false,
+      published: data.published !== false,
+    };
+  } catch (error) {
+    console.error(`Error parsing blog post ${filename}:`, error);
+    return null;
+  }
+}
+
+/**
+ * Calculate reading time from content
+ */
+function calculateReadingTime(content: string): string {
+  const wordsPerMinute = 200;
+  const wordCount = content.trim().split(/\s+/).length;
+  const minutes = Math.ceil(wordCount / wordsPerMinute);
+  return `${minutes} min read`;
+}
+
+/**
+ * Get all blog posts
+ */
+function getAllBlogPosts(): BlogPost[] {
+  const files = getBlogFiles();
+  const posts = files
+    .map(parseBlogPost)
+    .filter((post): post is BlogPost => post !== null && post.published !== false)
+    .sort((a, b) => {
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
+      return dateB.getTime() - dateA.getTime();
+    });
+
+  return posts;
+}
+
+// Export blogPosts
+export const blogPosts = getAllBlogPosts();
+
+/**
+ * Get blog post by slug
+ */
+export function getBlogPostBySlug(slug: string): BlogPost | undefined {
+  return blogPosts.find((post) => post.slug === slug);
+}
+
+/**
+ * Get blog post content by slug (legacy function for compatibility)
  */
 export function getBlogPostContent(slug: string): string {
-  // Sample markdown content
-  // In production, this would read from MDX files
-  return `
-# ${slug.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
-
-## Introduction
-
-This is a sample blog post demonstrating the blog system architecture. In production, this content would be loaded from MDX files stored in the \`content/blog\` directory.
-
-## Key Features
-
-- **Performance**: Optimized for fast loading and rendering
-- **SEO**: Built-in structured data and meta tags
-- **Accessibility**: WCAG 2.1 AA compliant
-- **Responsive**: Mobile-first design
-
-## Getting Started
-
-Here's a quick example of how to use this feature:
-
-\`\`\`javascript
-const result = await whisperAPI.transcribe({
-  file: audioFile,
-  language: 'en',
-  model: 'whisper-1'
-});
-
-console.log(result.text);
-\`\`\`
-
-## Best Practices
-
-1. **Always validate input**: Ensure audio files are in supported formats
-2. **Handle errors gracefully**: Implement proper error handling and retries
-3. **Monitor usage**: Keep track of your API usage and quota
-
-## Advanced Usage
-
-For more advanced use cases, you can customize various parameters:
-
-- Language detection
-- Speaker diarization
-- Custom vocabulary
-- Webhook callbacks
-
-## Conclusion
-
-This feature enables powerful voice transcription capabilities in your applications. We're excited to see what you build with it!
-
-### Resources
-
-- [API Documentation](/docs/api)
-- [Code Examples](/docs/examples)
-- [Community Forum](/community)
-
----
-
-*Have questions? Reach out to our support team or join our Discord community.*
-  `.trim();
+  const post = getBlogPostBySlug(slug);
+  return post?.content || '';
 }
 
-// Export blogPosts for compatibility
-export const blogPosts = sampleBlogPosts.map(post => ({
-  ...post,
-  readingTime: '5 min read',
-  content: getBlogPostContent(post.slug),
-  author: authors[post.author],
-  relatedPosts: [],
-}));
-
-// Get blog post by slug
-export function getBlogPostBySlug(slug: string) {
-  return blogPosts.find(post => post.slug === slug);
-}
+export const categories = Array.from(new Set(blogPosts.map((post) => post.category)));
