@@ -15,10 +15,19 @@
  */
 
 import Hero from '@/components/Hero';
+import SocialProof from '@/components/SocialProof';
+import TrustBadges from '@/components/TrustBadges';
 import Features from '@/components/Features';
+import FeaturesGrid from '@/components/FeaturesGrid';
+import HowItWorks from '@/components/HowItWorks';
+import UseCases from '@/components/UseCases';
 import PricingTable from '@/components/PricingTable';
+import PricingComparison from '@/components/PricingComparison';
 import ComparisonTable from '@/components/ComparisonTable';
+import GuaranteeSection from '@/components/GuaranteeSection';
 import FAQ from '@/components/FAQ';
+import CTASection from '@/components/CTASection';
+import InlineCTA from '@/components/InlineCTA';
 import Link from 'next/link';
 
 export default function HomePage() {
@@ -27,8 +36,33 @@ export default function HomePage() {
       {/* Hero Section */}
       <Hero />
 
+      {/* Social Proof Section */}
+      <SocialProof />
+
+      {/* Trust Badges Section */}
+      <TrustBadges />
+
       {/* Features Section */}
       <Features />
+
+      {/* Inline CTA 1 - After Features */}
+      <InlineCTA variant="minimal" description="See how easy it is to integrate WhisperAPI" />
+
+      {/* Features Grid */}
+      <FeaturesGrid />
+
+      {/* How It Works Section */}
+      <HowItWorks />
+
+      {/* Inline CTA 2 - After How It Works */}
+      <InlineCTA
+        variant="default"
+        title="Ready to Start Transcribing?"
+        description="Get started in minutes with our simple API. No complex setup required."
+      />
+
+      {/* Use Cases Section */}
+      <UseCases />
 
       {/* Live Demo Section */}
       <section className="py-20 bg-gray-50">
@@ -80,11 +114,37 @@ export default function HomePage() {
       {/* Comparison Table */}
       <ComparisonTable />
 
+      {/* Inline CTA 3 - Highlight variant */}
+      <InlineCTA
+        variant="highlight"
+        title="80% Cheaper Than Competitors"
+        description="See why thousands of developers are switching to WhisperAPI"
+      />
+
       {/* Pricing Table */}
       <PricingTable />
 
+      {/* Pricing Comparison - Detailed */}
+      <PricingComparison />
+
+      {/* Guarantee Section */}
+      <GuaranteeSection />
+
       {/* FAQ */}
       <FAQ />
+
+      {/* Inline CTA 4 - Social proof variant */}
+      <InlineCTA
+        variant="social"
+        title="Join 10,000+ Developers"
+        description="Start transcribing audio with the fastest, most affordable API"
+        stats={[
+          { value: '500M+', label: 'Minutes Transcribed' },
+          { value: '99.2%', label: 'Accuracy Rate' },
+          { value: '10K+', label: 'Developers' },
+          { value: '2.5K+', label: 'Companies' },
+        ]}
+      />
 
       {/* Final CTA */}
       <section className="py-20 bg-gradient-to-r from-primary-600 to-blue-500">
@@ -116,6 +176,14 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Sticky Bottom CTA - appears on scroll */}
+      <CTASection
+        primaryText="Start Free Trial"
+        primaryHref="/signup"
+        secondaryText="Book Demo"
+        secondaryHref="#demo"
+      />
     </>
   );
 }

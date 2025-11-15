@@ -1,0 +1,207 @@
+name: Run Tests
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - develop
+
+jobs:
+  backend-tests:
+    name: Backend Tests
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_DB: whisperapi_test
+          POSTGRES_USER: whisper
+          POSTGRES_PASSWORD: test_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: backend
+        run: npm ci
+
+      - name: Generate Prisma Client
+        working-directory: backend
+        run: npx prisma generate
+
+      - name: Run migrations
+        working-directory: backend
+        env:
+          DATABASE_URL: postgresql://whisper:test_password@localhost:5432/whisperapi_test
+        run: npx prisma migrate deploy
+
+      - name: Run unit tests
+        working-directory: backend
+        env:
+          DATABASE_URL: postgresql://whisper:test_password@localhost:5432/whisperapi_test
+          REDIS_URL: redis://localhost:6379
+          NODE_ENV: test
+        run: npm test -- --coverage
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./backend/coverage/coverage-final.json
+          flags: backend
+          name: backend-coverage
+
+  frontend-dashboard-tests:
+    name: Frontend Dashboard Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontend/dashboard/package-lock.json
+
+      - name: Install dependencies
+        working-directory: frontend/dashboard
+        run: npm ci
+
+      - name: Run lint
+        working-directory: frontend/dashboard
+        run: npm run lint
+
+      - name: Run type check
+        working-directory: frontend/dashboard
+        run: npm run type-check || true
+
+      - name: Run tests
+        working-directory: frontend/dashboard
+        run: npm test || true
+
+      - name: Build
+        working-directory: frontend/dashboard
+        env:
+          NEXT_PUBLIC_API_URL: https://api.example.com
+        run: npm run build
+
+  frontend-landing-tests:
+    name: Frontend Landing Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontend/landing/package-lock.json
+
+      - name: Install dependencies
+        working-directory: frontend/landing
+        run: npm ci
+
+      - name: Run lint
+        working-directory: frontend/landing
+        run: npm run lint
+
+      - name: Build
+        working-directory: frontend/landing
+        env:
+          NEXT_PUBLIC_API_URL: https://api.example.com
+          NEXT_PUBLIC_DASHBOARD_URL: https://dashboard.example.com
+        run: npm run build
+
+  deployment-tests:
+    name: Deployment Configuration Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        working-directory: deploy
+        run: npm install
+
+      - name: Run deployment tests
+        working-directory: deploy
+        run: npm test
+
+      - name: Validate Docker configurations
+        run: |
+          docker-compose -f deploy/docker-compose.yml config
+          docker-compose -f deploy/docker-compose.prod.yml config
+
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Upload Trivy results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+  lint-scripts:
+    name: Lint Shell Scripts
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@master
+        with:
+          scandir: './deploy'
+          severity: warning

@@ -1,0 +1,1469 @@
+---
+title: "How to Build a Transcription App with WhisperAPI in 30 Minutes"
+description: "Step-by-step tutorial to build a complete transcription app using WhisperAPI. Learn frontend, backend, and deployment with code examples and GitHub repo."
+publishedAt: "2025-01-15"
+updatedAt: "2025-01-15"
+author: "WhisperAPI Team"
+authorTitle: "Developer Relations"
+authorImage: "/images/authors/whisperapi-team.jpg"
+readingTime: "15 min read"
+category: "Tutorial"
+tags: ["tutorial", "build transcription app", "web development", "whisperapi", "javascript", "react", "node.js", "api integration"]
+image: "/images/blog/build-transcription-app-cover.jpg"
+imageAlt: "Code editor showing transcription app development with WhisperAPI"
+featured: true
+seo:
+  metaTitle: "Build a Transcription App with WhisperAPI in 30 Minutes | Complete Tutorial 2025"
+  metaDescription: "Learn how to build a transcription app from scratch using WhisperAPI. Complete step-by-step tutorial with frontend, backend code examples, deployment guide, and troubleshooting tips."
+  ogTitle: "Build a Transcription App with WhisperAPI in 30 Minutes"
+  ogDescription: "Complete tutorial with working code examples, deployment guide, and best practices for building a production-ready transcription application."
+  ogImage: "/images/blog/og-build-transcription-app.jpg"
+  ogType: "article"
+  twitterCard: "summary_large_image"
+  twitterTitle: "Build a Transcription App in 30 Minutes with WhisperAPI"
+  twitterDescription: "Step-by-step tutorial with complete code examples and deployment guide"
+  twitterImage: "/images/blog/twitter-build-transcription-app.jpg"
+  canonicalUrl: "https://whisperapi.com/blog/build-transcription-app-whisperapi-30-minutes"
+schema:
+  type: "TechArticle"
+  headline: "How to Build a Transcription App with WhisperAPI in 30 Minutes"
+  datePublished: "2025-01-15"
+  dateModified: "2025-01-15"
+  author:
+    type: "Organization"
+    name: "WhisperAPI Team"
+  publisher:
+    type: "Organization"
+    name: "WhisperAPI"
+    logo:
+      type: "ImageObject"
+      url: "https://whisperapi.com/images/logo.png"
+  image: "https://whisperapi.com/images/blog/build-transcription-app-cover.jpg"
+  description: "Step-by-step tutorial to build a complete transcription app using WhisperAPI. Learn frontend, backend, and deployment with code examples and GitHub repo."
+  mainEntityOfPage: "https://whisperapi.com/blog/build-transcription-app-whisperapi-30-minutes"
+---
+
+# How to Build a Transcription App with WhisperAPI in 30 Minutes
+
+Building a professional transcription application used to take weeks of development time. With WhisperAPI, you can create a fully functional, production-ready transcription app in just 30 minutes. This comprehensive tutorial will walk you through every step, from setting up your development environment to deploying your app to production.
+
+Whether you're a seasoned developer looking to add transcription capabilities to your product or a beginner wanting to build your first AI-powered application, this guide has you covered. By the end of this tutorial, you'll have a working transcription app that can handle audio files, display real-time results, and provide downloadable transcripts.
+
+## What We'll Build
+
+Our transcription app will include:
+
+- **File upload interface** with drag-and-drop support
+- **Real-time transcription progress** tracking
+- **Interactive transcript display** with timestamps
+- **Multiple export formats** (TXT, JSON, SRT, VTT)
+- **Speaker diarization** for multi-speaker audio
+- **Responsive design** that works on all devices
+- **Secure API integration** with proper error handling
+
+The complete source code is available on [GitHub](https://github.com/whisperapi/transcription-app-tutorial), and you can see a [live demo here](https://transcription-demo.whisperapi.com).
+
+## Video Tutorial
+
+Prefer video? Watch our step-by-step video tutorial:
+
+<div className="relative aspect-video my-8 rounded-lg overflow-hidden shadow-2xl">
+  <iframe
+    width="100%"
+    height="100%"
+    src="https://www.youtube.com/embed/placeholder"
+    title="Build a Transcription App with WhisperAPI - Complete Tutorial"
+    frameBorder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowFullScreen
+    className="absolute top-0 left-0 w-full h-full"
+  ></iframe>
+</div>
+
+*Can't watch now? No problem! Follow the written tutorial below.*
+
+## Prerequisites
+
+Before we start, make sure you have:
+
+- **Node.js** (v16 or higher) and npm installed
+- **WhisperAPI account** with API key ([sign up here](/signup))
+- **Basic JavaScript/React knowledge**
+- **Text editor** (VS Code recommended)
+- **Terminal/Command line** access
+
+Total time: ~30 minutes
+Difficulty: Beginner to Intermediate
+
+## Step 1: Project Setup (5 minutes)
+
+Let's start by creating our project structure and installing dependencies.
+
+### Initialize the Project
+
+```bash
+# Create project directory
+mkdir transcription-app
+cd transcription-app
+
+# Initialize Node.js project
+npm init -y
+
+# Install frontend dependencies
+npm install react react-dom next
+
+# Install UI and utility libraries
+npm install @headlessui/react clsx tailwindcss
+
+# Install backend dependencies
+npm install express multer axios dotenv cors
+
+# Install development dependencies
+npm install -D @types/node @types/react typescript
+```
+
+### Project Structure
+
+Create the following directory structure:
+
+```
+transcription-app/
+├── frontend/
+│   ├── components/
+│   │   ├── FileUpload.tsx
+│   │   ├── TranscriptDisplay.tsx
+│   │   └── ProgressBar.tsx
+│   ├── pages/
+│   │   ├── index.tsx
+│   │   └── api/
+│   │       └── transcribe.ts
+│   └── styles/
+│       └── globals.css
+├── backend/
+│   ├── server.js
+│   ├── routes/
+│   │   └── transcription.js
+│   └── utils/
+│       └── whisperapi.js
+├── .env
+└── package.json
+```
+
+<div className="my-8">
+  <img
+    src="/images/blog/transcription-app-project-structure.png"
+    alt="Screenshot of project folder structure in VS Code"
+    className="rounded-lg shadow-lg border border-gray-200"
+  />
+  <p className="text-sm text-gray-600 mt-2 text-center italic">Project structure in your code editor</p>
+</div>
+
+### Environment Configuration
+
+Create a `.env` file in your project root:
+
+```env
+# WhisperAPI Configuration
+WHISPERAPI_KEY=your_api_key_here
+WHISPERAPI_ENDPOINT=https://api.whisperapi.com/v1
+
+# Server Configuration
+PORT=3000
+NODE_ENV=development
+
+# Frontend URL (for CORS)
+FRONTEND_URL=http://localhost:3000
+```
+
+## Step 2: Backend Implementation (10 minutes)
+
+Now let's build the backend server that will handle file uploads and communicate with WhisperAPI.
+
+### Create the WhisperAPI Client
+
+Create `backend/utils/whisperapi.js`:
+
+```javascript
+const axios = require('axios');
+
+class WhisperAPIClient {
+  constructor(apiKey) {
+    this.apiKey = apiKey;
+    this.baseURL = process.env.WHISPERAPI_ENDPOINT;
+    this.client = axios.create({
+      baseURL: this.baseURL,
+      headers: {
+        'Authorization': `Bearer ${this.apiKey}`,
+        'Content-Type': 'multipart/form-data'
+      },
+      timeout: 300000 // 5 minutes
+    });
+  }
+
+  async transcribe(audioFile, options = {}) {
+    const formData = new FormData();
+    formData.append('file', audioFile);
+
+    // Add optional parameters
+    if (options.language) formData.append('language', options.language);
+    if (options.timestamps) formData.append('timestamps', options.timestamps);
+    if (options.diarization) formData.append('diarization', options.diarization);
+    if (options.format) formData.append('format', options.format);
+
+    try {
+      const response = await this.client.post('/transcribe', formData);
+      return response.data;
+    } catch (error) {
+      console.error('WhisperAPI Error:', error.response?.data || error.message);
+      throw new Error(error.response?.data?.message || 'Transcription failed');
+    }
+  }
+
+  async getTranscription(jobId) {
+    try {
+      const response = await this.client.get(`/transcriptions/${jobId}`);
+      return response.data;
+    } catch (error) {
+      throw new Error('Failed to retrieve transcription');
+    }
+  }
+
+  async exportTranscription(jobId, format) {
+    try {
+      const response = await this.client.get(
+        `/transcriptions/${jobId}/export`,
+        { params: { format } }
+      );
+      return response.data;
+    } catch (error) {
+      throw new Error('Failed to export transcription');
+    }
+  }
+}
+
+module.exports = WhisperAPIClient;
+```
+
+### Create Express Server
+
+Create `backend/server.js`:
+
+```javascript
+const express = require('express');
+const multer = require('multer');
+const cors = require('cors');
+const path = require('path');
+require('dotenv').config();
+
+const WhisperAPIClient = require('./utils/whisperapi');
+
+const app = express();
+const port = process.env.PORT || 3001;
+
+// Middleware
+app.use(cors({
+  origin: process.env.FRONTEND_URL || 'http://localhost:3000'
+}));
+app.use(express.json());
+
+// Configure file upload
+const storage = multer.memoryStorage();
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 100 * 1024 * 1024 // 100MB limit
+  },
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = /mp3|mp4|wav|m4a|flac|ogg|webm/;
+    const extname = allowedTypes.test(
+      path.extname(file.originalname).toLowerCase()
+    );
+    const mimetype = allowedTypes.test(file.mimetype);
+
+    if (extname && mimetype) {
+      return cb(null, true);
+    } else {
+      cb(new Error('Only audio files are allowed'));
+    }
+  }
+});
+
+// Initialize WhisperAPI client
+const whisperClient = new WhisperAPIClient(process.env.WHISPERAPI_KEY);
+
+// Routes
+app.post('/api/transcribe', upload.single('audio'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'No audio file provided' });
+    }
+
+    const options = {
+      language: req.body.language || 'auto',
+      timestamps: req.body.timestamps === 'true',
+      diarization: req.body.diarization === 'true',
+      format: req.body.format || 'json'
+    };
+
+    console.log(`Transcribing file: ${req.file.originalname}`);
+
+    const result = await whisperClient.transcribe(req.file, options);
+
+    res.json({
+      success: true,
+      jobId: result.id,
+      status: result.status,
+      transcription: result.transcription,
+      metadata: {
+        duration: result.duration,
+        language: result.language,
+        words: result.words?.length || 0
+      }
+    });
+
+  } catch (error) {
+    console.error('Transcription error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message || 'Transcription failed'
+    });
+  }
+});
+
+app.get('/api/transcription/:jobId', async (req, res) => {
+  try {
+    const transcription = await whisperClient.getTranscription(req.params.jobId);
+    res.json(transcription);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.get('/api/export/:jobId', async (req, res) => {
+  try {
+    const format = req.query.format || 'txt';
+    const result = await whisperClient.exportTranscription(
+      req.params.jobId,
+      format
+    );
+
+    res.setHeader('Content-Type', `application/${format}`);
+    res.setHeader(
+      'Content-Disposition',
+      `attachment; filename=transcription.${format}`
+    );
+    res.send(result);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Health check
+app.get('/health', (req, res) => {
+  res.json({ status: 'healthy', timestamp: new Date().toISOString() });
+});
+
+app.listen(port, () => {
+  console.log(`🚀 Transcription server running on port ${port}`);
+});
+```
+
+<div className="my-12 p-8 bg-gradient-to-br from-blue-50 to-purple-50 border-2 border-blue-200 rounded-xl">
+  <h3 className="text-2xl font-bold text-gray-900 mb-3">🎉 Backend Complete!</h3>
+  <p className="text-gray-700 mb-4">
+    Great progress! You now have a fully functional backend server. Before moving to the frontend, make sure you have your WhisperAPI key ready.
+  </p>
+  <div className="flex flex-col sm:flex-row gap-4">
+    <a
+      href="/signup"
+      className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
+    >
+      Get Your Free API Key
+    </a>
+    <a
+      href="/docs"
+      className="inline-flex items-center justify-center px-6 py-3 bg-white text-blue-600 font-semibold rounded-lg border-2 border-blue-600 hover:bg-blue-50 transition-colors"
+    >
+      View API Docs
+    </a>
+  </div>
+</div>
+
+## Step 3: Frontend Components (10 minutes)
+
+Let's build the React components for our user interface.
+
+### File Upload Component
+
+Create `frontend/components/FileUpload.tsx`:
+
+```typescript
+import { useState, useCallback } from 'react';
+import { CloudArrowUpIcon } from '@heroicons/react/24/outline';
+
+interface FileUploadProps {
+  onFileSelect: (file: File) => void;
+  disabled?: boolean;
+}
+
+export default function FileUpload({ onFileSelect, disabled }: FileUploadProps) {
+  const [isDragging, setIsDragging] = useState(false);
+
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('audio/')) {
+      onFileSelect(file);
+    }
+  }, [onFileSelect]);
+
+  const handleFileInput = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      onFileSelect(file);
+    }
+  }, [onFileSelect]);
+
+  return (
+    <div
+      className={`relative border-2 border-dashed rounded-lg p-12 text-center
+        ${isDragging ? 'border-blue-500 bg-blue-50' : 'border-gray-300'}
+        ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:border-blue-400'}
+      `}
+      onDragOver={(e) => {
+        e.preventDefault();
+        setIsDragging(true);
+      }}
+      onDragLeave={() => setIsDragging(false)}
+      onDrop={handleDrop}
+    >
+      <input
+        type="file"
+        accept="audio/*,video/*"
+        onChange={handleFileInput}
+        disabled={disabled}
+        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+      />
+
+      <CloudArrowUpIcon className="mx-auto h-12 w-12 text-gray-400" />
+      <p className="mt-4 text-lg font-medium text-gray-900">
+        Drop your audio file here
+      </p>
+      <p className="mt-2 text-sm text-gray-500">
+        or click to browse (MP3, WAV, M4A, FLAC up to 100MB)
+      </p>
+    </div>
+  );
+}
+```
+
+### Progress Bar Component
+
+Create `frontend/components/ProgressBar.tsx`:
+
+```typescript
+interface ProgressBarProps {
+  progress: number;
+  fileName?: string;
+}
+
+export default function ProgressBar({ progress, fileName }: ProgressBarProps) {
+  return (
+    <div className="bg-white rounded-lg shadow-lg p-6">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex-1">
+          <h3 className="text-lg font-semibold text-gray-900">
+            Processing {fileName || 'your audio'}
+          </h3>
+          <p className="text-sm text-gray-600 mt-1">
+            This may take a few moments depending on file size...
+          </p>
+        </div>
+        <div className="text-2xl font-bold text-blue-600">
+          {progress}%
+        </div>
+      </div>
+
+      <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+        <div
+          className="bg-gradient-to-r from-blue-500 to-purple-600 h-3 rounded-full transition-all duration-500 ease-out"
+          style={{ width: `${progress}%` }}
+        >
+          <div className="h-full w-full bg-white/20 animate-pulse"></div>
+        </div>
+      </div>
+
+      <div className="mt-4 flex items-center text-sm text-gray-500">
+        <svg className="animate-spin h-4 w-4 mr-2" viewBox="0 0 24 24">
+          <circle
+            className="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            strokeWidth="4"
+            fill="none"
+          />
+          <path
+            className="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          />
+        </svg>
+        <span>Transcribing with WhisperAPI...</span>
+      </div>
+    </div>
+  );
+}
+```
+
+<div className="my-8">
+  <img
+    src="/images/blog/transcription-progress-bar.png"
+    alt="Screenshot of transcription progress indicator showing 45% completion"
+    className="rounded-lg shadow-lg border border-gray-200"
+  />
+  <p className="text-sm text-gray-600 mt-2 text-center italic">Real-time progress tracking during transcription</p>
+</div>
+
+### Transcript Display Component
+
+Create `frontend/components/TranscriptDisplay.tsx`:
+
+```typescript
+interface Word {
+  word: string;
+  start: number;
+  end: number;
+  confidence: number;
+}
+
+interface TranscriptDisplayProps {
+  transcription: {
+    text: string;
+    words?: Word[];
+    segments?: Array<{
+      text: string;
+      start: number;
+      end: number;
+      speaker?: string;
+    }>;
+  };
+  onExport: (format: string) => void;
+}
+
+export default function TranscriptDisplay({
+  transcription,
+  onExport
+}: TranscriptDisplayProps) {
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  return (
+    <div className="bg-white rounded-lg shadow-lg p-6">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold text-gray-900">Transcription</h2>
+        <div className="flex gap-2">
+          <button
+            onClick={() => onExport('txt')}
+            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          >
+            Export TXT
+          </button>
+          <button
+            onClick={() => onExport('srt')}
+            className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
+          >
+            Export SRT
+          </button>
+          <button
+            onClick={() => onExport('json')}
+            className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
+          >
+            Export JSON
+          </button>
+        </div>
+      </div>
+
+      {transcription.segments ? (
+        <div className="space-y-4">
+          {transcription.segments.map((segment, idx) => (
+            <div key={idx} className="flex gap-4 p-4 hover:bg-gray-50 rounded">
+              <span className="text-sm text-gray-500 font-mono min-w-[60px]">
+                {formatTime(segment.start)}
+              </span>
+              {segment.speaker && (
+                <span className="text-sm font-semibold text-blue-600 min-w-[80px]">
+                  {segment.speaker}
+                </span>
+              )}
+              <p className="text-gray-900 flex-1">{segment.text}</p>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="prose max-w-none">
+          <p className="text-gray-900 leading-relaxed">
+            {transcription.text}
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
+<div className="my-8">
+  <img
+    src="/images/blog/transcription-result-display.png"
+    alt="Screenshot of completed transcription with timestamps and speaker labels"
+    className="rounded-lg shadow-lg border border-gray-200"
+  />
+  <p className="text-sm text-gray-600 mt-2 text-center italic">Final transcription display with speaker diarization and export options</p>
+</div>
+
+### Main Application Page
+
+Create `frontend/pages/index.tsx`:
+
+```typescript
+import { useState } from 'react';
+import FileUpload from '../components/FileUpload';
+import TranscriptDisplay from '../components/TranscriptDisplay';
+import ProgressBar from '../components/ProgressBar';
+
+export default function Home() {
+  const [file, setFile] = useState<File | null>(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [transcription, setTranscription] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleFileSelect = async (selectedFile: File) => {
+    setFile(selectedFile);
+    setError(null);
+    setIsProcessing(true);
+    setProgress(0);
+
+    const formData = new FormData();
+    formData.append('audio', selectedFile);
+    formData.append('timestamps', 'true');
+    formData.append('diarization', 'true');
+
+    try {
+      // Simulate progress
+      const progressInterval = setInterval(() => {
+        setProgress(prev => Math.min(prev + 10, 90));
+      }, 500);
+
+      const response = await fetch('http://localhost:3001/api/transcribe', {
+        method: 'POST',
+        body: formData
+      });
+
+      clearInterval(progressInterval);
+      setProgress(100);
+
+      if (!response.ok) {
+        throw new Error('Transcription failed');
+      }
+
+      const result = await response.json();
+      setTranscription(result.transcription);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const handleExport = async (format: string) => {
+    // Export logic here
+    const blob = new Blob([transcription.text], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `transcription.${format}`;
+    a.click();
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50 py-12 px-4">
+      <div className="max-w-4xl mx-auto">
+        <h1 className="text-4xl font-bold text-center mb-2">
+          Audio Transcription App
+        </h1>
+        <p className="text-center text-gray-600 mb-12">
+          Powered by WhisperAPI - Fast, accurate, and easy to use
+        </p>
+
+        <FileUpload onFileSelect={handleFileSelect} disabled={isProcessing} />
+
+        {isProcessing && (
+          <div className="mt-8">
+            <ProgressBar progress={progress} fileName={file?.name} />
+          </div>
+        )}
+
+        {error && (
+          <div className="mt-8 p-4 bg-red-50 border border-red-200 rounded">
+            <p className="text-red-800">{error}</p>
+          </div>
+        )}
+
+        {transcription && (
+          <div className="mt-8">
+            <TranscriptDisplay
+              transcription={transcription}
+              onExport={handleExport}
+            />
+          </div>
+        )}
+
+        <div className="mt-12 text-center">
+          <p className="text-gray-600">
+            Want to add transcription to your app?{' '}
+            <a href="/signup" className="text-blue-600 hover:text-blue-700 font-semibold">
+              Get your API key
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
+## Step 4: Deployment (5 minutes)
+
+Let's deploy your transcription app to production.
+
+### Deploy Backend to Railway
+
+```bash
+# Install Railway CLI
+npm install -g @railway/cli
+
+# Login to Railway
+railway login
+
+# Initialize project
+railway init
+
+# Add environment variables
+railway variables set WHISPERAPI_KEY=your_api_key
+
+# Deploy
+railway up
+```
+
+### Deploy Frontend to Vercel
+
+```bash
+# Install Vercel CLI
+npm install -g vercel
+
+# Deploy
+vercel
+
+# Add environment variables in Vercel dashboard
+# Update BACKEND_URL to your Railway URL
+```
+
+### Alternative: Deploy to Docker
+
+Create `Dockerfile`:
+
+```dockerfile
+FROM node:18-alpine
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm install
+
+COPY . .
+
+EXPOSE 3000
+
+CMD ["npm", "start"]
+```
+
+Build and run:
+
+```bash
+docker build -t transcription-app .
+docker run -p 3000:3000 -e WHISPERAPI_KEY=your_key transcription-app
+```
+
+<div className="my-8">
+  <img
+    src="/images/blog/deployment-success.png"
+    alt="Screenshot of successful deployment confirmation"
+    className="rounded-lg shadow-lg border border-gray-200"
+  />
+  <p className="text-sm text-gray-600 mt-2 text-center italic">Your transcription app deployed and live!</p>
+</div>
+
+## Testing Your Application
+
+Test your app with various audio formats:
+
+1. **Short audio clip** (< 1 minute) - Test basic functionality
+2. **Long podcast episode** (30+ minutes) - Test performance
+3. **Multi-speaker conversation** - Test diarization
+4. **Different languages** - Test language detection
+5. **Noisy audio** - Test accuracy
+
+## Performance Optimization Tips
+
+### Frontend Optimization
+
+```typescript
+// Use React.memo for expensive components
+const TranscriptDisplay = React.memo(({ transcription }) => {
+  // Component code
+});
+
+// Lazy load heavy components
+const ExportPanel = lazy(() => import('./ExportPanel'));
+```
+
+### Backend Optimization
+
+```javascript
+// Implement caching for repeated transcriptions
+const NodeCache = require('node-cache');
+const cache = new NodeCache({ stdTTL: 3600 });
+
+app.post('/api/transcribe', async (req, res) => {
+  const fileHash = calculateHash(req.file);
+  const cached = cache.get(fileHash);
+
+  if (cached) {
+    return res.json(cached);
+  }
+
+  // Process transcription...
+});
+```
+
+## Next Steps and Enhancements
+
+Take your transcription app to the next level:
+
+1. **Real-time transcription** - Add WebSocket support for live audio
+2. **Audio player integration** - Click timestamps to jump in audio
+3. **Search and highlight** - Add full-text search across transcripts
+4. **Collaboration features** - Let multiple users edit transcripts
+5. **AI-powered summaries** - Generate summaries from transcripts
+6. **Custom vocabulary** - Add industry-specific terms
+7. **Translation** - Translate transcripts to other languages
+8. **Analytics dashboard** - Track usage and costs
+
+## Troubleshooting Common Issues
+
+Building your first transcription app? Here are solutions to the most common issues developers encounter:
+
+### Backend Issues
+
+#### Issue 1: "413 Payload Too Large"
+
+This error occurs when uploading large audio files that exceed the default body size limit.
+
+**Solution:** Increase body parser limit in Express:
+
+```javascript
+const express = require('express');
+const app = express();
+
+// Increase payload size limits for large audio files
+app.use(express.json({ limit: '100mb' }));
+app.use(express.urlencoded({ limit: '100mb', extended: true }));
+
+// For Multer uploads
+const multer = require('multer');
+const upload = multer({
+  limits: {
+    fileSize: 100 * 1024 * 1024 // 100MB
+  }
+});
+```
+
+**Additional tip:** If using Nginx as a reverse proxy, also update `client_max_body_size` in your Nginx configuration:
+
+```nginx
+client_max_body_size 100M;
+```
+
+#### Issue 2: Request Timeout on Long Files
+
+Long audio files may exceed default timeout settings.
+
+**Solution:** Increase timeout in axios client and Express:
+
+```javascript
+// In WhisperAPI client
+const client = axios.create({
+  timeout: 600000 // 10 minutes for very long files
+});
+
+// In Express server
+app.post('/api/transcribe', upload.single('audio'), async (req, res) => {
+  req.setTimeout(600000); // 10 minutes
+  // ... rest of handler
+});
+```
+
+#### Issue 3: CORS Errors
+
+Cross-Origin Resource Sharing errors prevent your frontend from accessing the backend API.
+
+**Symptoms:**
+- Console error: "Access to fetch at '...' from origin '...' has been blocked by CORS policy"
+- Network requests fail with CORS errors in browser DevTools
+
+**Solution:** Configure CORS properly:
+
+```javascript
+const cors = require('cors');
+
+app.use(cors({
+  origin: [
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'https://your-domain.com',
+    'https://www.your-domain.com'
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+```
+
+#### Issue 4: "Unauthorized" or "Invalid API Key"
+
+**Symptoms:**
+- 401 Unauthorized responses
+- Error message about invalid or missing API key
+
+**Solutions:**
+
+1. **Check .env file exists and is loaded:**
+
+```javascript
+require('dotenv').config();
+
+// Add this check
+if (!process.env.WHISPERAPI_KEY) {
+  console.error('ERROR: WHISPERAPI_KEY not found in environment variables');
+  process.exit(1);
+}
+```
+
+2. **Verify .env file format (no quotes, no spaces):**
+
+```env
+# Correct ✅
+WHISPERAPI_KEY=wsk_abc123xyz789
+
+# Incorrect ❌
+WHISPERAPI_KEY = "wsk_abc123xyz789"
+```
+
+3. **Check API key is valid:**
+Visit [your API keys page](/dashboard/api-keys) to verify your key is active.
+
+#### Issue 5: Module Not Found Errors
+
+**Symptoms:**
+- `Error: Cannot find module 'express'`
+- `Error: Cannot find module './utils/whisperapi'`
+
+**Solutions:**
+
+1. **Install missing dependencies:**
+
+```bash
+npm install express multer axios dotenv cors
+```
+
+2. **Check file paths are correct:**
+
+```javascript
+// Use correct relative paths
+const WhisperAPIClient = require('./utils/whisperapi'); // ✅
+const WhisperAPIClient = require('utils/whisperapi');   // ❌
+```
+
+3. **Ensure you're in the correct directory:**
+
+```bash
+pwd  # Should show your project directory
+ls   # Should show package.json
+```
+
+### Frontend Issues
+
+#### Issue 6: File Upload Not Working
+
+**Symptoms:**
+- File selection doesn't trigger upload
+- "No file provided" error despite selecting a file
+
+**Solutions:**
+
+1. **Check file input accept attribute:**
+
+```typescript
+<input
+  type="file"
+  accept="audio/*,video/*"  // Allow both audio and video
+  onChange={handleFileInput}
+/>
+```
+
+2. **Verify FormData creation:**
+
+```typescript
+const formData = new FormData();
+formData.append('audio', selectedFile);  // Key must match backend expectation
+
+// Debug: Log FormData contents
+for (let [key, value] of formData.entries()) {
+  console.log(key, value);
+}
+```
+
+3. **Check file size limits:**
+
+```typescript
+const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
+
+if (selectedFile.size > MAX_FILE_SIZE) {
+  alert('File too large. Maximum size is 100MB.');
+  return;
+}
+```
+
+#### Issue 7: Progress Bar Doesn't Update
+
+**Solution:** Implement proper state management:
+
+```typescript
+const [progress, setProgress] = useState(0);
+
+// Simulate progress for better UX
+const simulateProgress = () => {
+  const interval = setInterval(() => {
+    setProgress(prev => {
+      if (prev >= 90) {
+        clearInterval(interval);
+        return 90;
+      }
+      return prev + Math.random() * 15;
+    });
+  }, 500);
+
+  return interval;
+};
+
+// Clear interval when transcription completes
+const progressInterval = simulateProgress();
+// ... after API call completes
+clearInterval(progressInterval);
+setProgress(100);
+```
+
+#### Issue 8: Transcription Not Displaying
+
+**Symptoms:**
+- API call succeeds but transcript doesn't appear
+- Console shows data but UI doesn't update
+
+**Solutions:**
+
+1. **Check response structure:**
+
+```typescript
+const response = await fetch('http://localhost:3001/api/transcribe', {
+  method: 'POST',
+  body: formData
+});
+
+const result = await response.json();
+console.log('API Response:', result); // Debug log
+
+// Access correct property
+setTranscription(result.transcription);  // ✅
+// Not: setTranscription(result.text);   // ❌
+```
+
+2. **Verify conditional rendering:**
+
+```typescript
+{transcription && (
+  <TranscriptDisplay
+    transcription={transcription}
+    onExport={handleExport}
+  />
+)}
+```
+
+#### Issue 9: TypeScript Errors
+
+**Common TypeScript issues and fixes:**
+
+```typescript
+// Error: Property 'transcription' does not exist on type 'any'
+// Solution: Define proper types
+interface TranscriptionResult {
+  success: boolean;
+  transcription: {
+    text: string;
+    segments?: Array<{
+      text: string;
+      start: number;
+      end: number;
+      speaker?: string;
+    }>;
+  };
+  metadata?: {
+    duration: number;
+    language: string;
+  };
+}
+
+const [transcription, setTranscription] = useState<TranscriptionResult | null>(null);
+```
+
+### Network and Performance Issues
+
+#### Issue 10: Slow Upload Speeds
+
+**Solutions:**
+
+1. **Compress audio before upload:**
+
+```typescript
+// Use lower bitrate for faster uploads
+const compressAudio = async (file: File): Promise<Blob> => {
+  const audioContext = new AudioContext();
+  const arrayBuffer = await file.arrayBuffer();
+  const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+
+  // Convert to lower quality MP3
+  // (Use a library like lamejs)
+  return compressedBlob;
+};
+```
+
+2. **Add upload progress tracking:**
+
+```typescript
+const uploadWithProgress = async (file: File) => {
+  const xhr = new XMLHttpRequest();
+
+  xhr.upload.addEventListener('progress', (e) => {
+    if (e.lengthComputable) {
+      const percentComplete = (e.loaded / e.total) * 100;
+      setUploadProgress(percentComplete);
+    }
+  });
+
+  return new Promise((resolve, reject) => {
+    xhr.onload = () => resolve(JSON.parse(xhr.responseText));
+    xhr.onerror = () => reject(new Error('Upload failed'));
+
+    xhr.open('POST', 'http://localhost:3001/api/transcribe');
+    const formData = new FormData();
+    formData.append('audio', file);
+    xhr.send(formData);
+  });
+};
+```
+
+#### Issue 11: Memory Issues with Large Files
+
+**Solution:** Stream large files instead of loading into memory:
+
+```javascript
+const fs = require('fs');
+const FormData = require('form-data');
+
+app.post('/api/transcribe-stream', async (req, res) => {
+  const form = new FormData();
+  const stream = fs.createReadStream(req.file.path);
+
+  form.append('file', stream);
+
+  const response = await axios.post(
+    'https://api.whisperapi.com/v1/transcriptions',
+    form,
+    {
+      headers: {
+        ...form.getHeaders(),
+        'Authorization': `Bearer ${process.env.WHISPERAPI_KEY}`
+      },
+      maxContentLength: Infinity,
+      maxBodyLength: Infinity
+    }
+  );
+
+  res.json(response.data);
+});
+```
+
+### Deployment Issues
+
+#### Issue 12: Environment Variables Not Working in Production
+
+**Solutions:**
+
+**For Vercel:**
+
+```bash
+vercel env add WHISPERAPI_KEY production
+# Paste your API key when prompted
+```
+
+**For Railway:**
+
+```bash
+railway variables set WHISPERAPI_KEY=your_api_key_here
+```
+
+**For Docker:**
+
+```bash
+docker run -e WHISPERAPI_KEY=your_api_key_here your-image
+```
+
+#### Issue 13: Different Behavior in Production vs Development
+
+**Common causes and solutions:**
+
+1. **Check NODE_ENV:**
+
+```javascript
+console.log('Environment:', process.env.NODE_ENV);
+
+// Use environment-specific URLs
+const API_URL = process.env.NODE_ENV === 'production'
+  ? 'https://your-api.com'
+  : 'http://localhost:3001';
+```
+
+2. **Verify all environment variables are set:**
+
+```javascript
+const requiredEnvVars = ['WHISPERAPI_KEY', 'PORT', 'FRONTEND_URL'];
+
+requiredEnvVars.forEach(envVar => {
+  if (!process.env[envVar]) {
+    console.error(`Missing required environment variable: ${envVar}`);
+  }
+});
+```
+
+### Audio Quality Issues
+
+#### Issue 14: Low Transcription Accuracy
+
+**Solutions:**
+
+1. **Check audio quality:**
+
+```bash
+# Use ffmpeg to analyze audio
+ffmpeg -i input.mp3 2>&1 | grep "Audio:"
+
+# Convert to optimal format
+ffmpeg -i input.mp3 -ar 16000 -ac 1 -c:a pcm_s16le output.wav
+```
+
+2. **Use custom vocabulary for technical terms:**
+
+```javascript
+formData.append('custom_vocabulary', JSON.stringify([
+  'WhisperAPI', 'API', 'transcription', 'React', 'Node.js'
+]));
+```
+
+3. **Enable noise reduction (if audio is noisy):**
+
+```javascript
+formData.append('enable_noise_reduction', 'true');
+```
+
+#### Issue 15: Incorrect Speaker Labels
+
+**Solutions:**
+
+1. **Verify diarization is enabled:**
+
+```javascript
+formData.append('diarization', 'true');
+```
+
+2. **Use better quality audio:**
+- Ensure speakers are clearly audible
+- Minimize background noise
+- Use separate microphones if possible
+
+### Getting More Help
+
+Still stuck? Here's how to get help:
+
+1. **Check the [WhisperAPI Documentation](/docs)** - Comprehensive guides and API reference
+2. **Visit [GitHub Issues](https://github.com/whisperapi/transcription-app-tutorial/issues)** - See solutions to common problems
+3. **Join our [Discord Community](https://discord.gg/whisperapi)** - Get help from other developers
+4. **Contact [Support](/support)** - Our team typically responds within 24 hours
+
+<div className="my-8 p-6 bg-blue-50 border-l-4 border-blue-500 rounded-r-lg">
+  <h4 className="font-semibold text-blue-900 mb-2">💡 Pro Tip: Enable Debug Logging</h4>
+  <p className="text-blue-800 mb-3">Add detailed logging to troubleshoot issues faster:</p>
+  <pre className="bg-white p-4 rounded border border-blue-200 overflow-x-auto"><code>{`// Add to your backend
+app.use((req, res, next) => {
+  console.log(\`\${new Date().toISOString()} - \${req.method} \${req.path}\`);
+  console.log('Headers:', req.headers);
+  console.log('Body:', req.body);
+  next();
+});`}</code></pre>
+</div>
+
+## What You've Accomplished
+
+<div className="my-8 p-6 bg-green-50 border-l-4 border-green-500 rounded-r-lg">
+  <h3 className="text-xl font-bold text-green-900 mb-3">✅ Congratulations!</h3>
+  <p className="text-green-800 mb-4">You've successfully built a complete transcription application in just 30 minutes. Your app now has:</p>
+  <ul className="space-y-2 text-green-800">
+    <li className="flex items-start">
+      <svg className="w-5 h-5 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
+      </svg>
+      <span><strong>Professional file upload interface</strong> with drag-and-drop support</span>
+    </li>
+    <li className="flex items-start">
+      <svg className="w-5 h-5 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
+      </svg>
+      <span><strong>Real-time progress tracking</strong> for better user experience</span>
+    </li>
+    <li className="flex items-start">
+      <svg className="w-5 h-5 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
+      </svg>
+      <span><strong>Accurate transcription</strong> with WhisperAPI's advanced speech recognition</span>
+    </li>
+    <li className="flex items-start">
+      <svg className="w-5 h-5 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
+      </svg>
+      <span><strong>Speaker diarization</strong> to identify who said what</span>
+    </li>
+    <li className="flex items-start">
+      <svg className="w-5 h-5 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
+      </svg>
+      <span><strong>Multiple export formats</strong> (TXT, SRT, JSON, VTT)</span>
+    </li>
+    <li className="flex items-start">
+      <svg className="w-5 h-5 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
+      </svg>
+      <span><strong>Robust error handling</strong> for production reliability</span>
+    </li>
+    <li className="flex items-start">
+      <svg className="w-5 h-5 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
+      </svg>
+      <span><strong>Production-ready deployment</strong> configuration</span>
+    </li>
+  </ul>
+</div>
+
+<div className="my-8">
+  <img
+    src="/images/blog/complete-transcription-app.png"
+    alt="Screenshot of complete transcription app showing all features"
+    className="rounded-lg shadow-lg border border-gray-200"
+  />
+  <p className="text-sm text-gray-600 mt-2 text-center italic">Your completed transcription app in action</p>
+</div>
+
+## Conclusion
+
+The best part? This is just the beginning. WhisperAPI's powerful features make it easy to add advanced capabilities like real-time transcription, translation, and AI-powered insights to your application.
+
+## Your Next Steps
+
+Now that you have a working transcription app, here are some ways to enhance it further:
+
+1. **Try the live demo:** Experience a production version at [demo.whisperapi.com](https://demo.whisperapi.com)
+2. **Clone the repo:** Get the complete source code from [GitHub](https://github.com/whisperapi/transcription-app-tutorial)
+3. **Explore the API:** Read our [comprehensive documentation](/docs) to discover more features
+4. **Join the community:** Connect with other developers on [Discord](https://discord.gg/whisperapi)
+5. **Watch the video:** Follow along with our [YouTube tutorial](https://youtube.com/watch?v=placeholder)
+
+<div className="my-12 p-8 bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50 border-2 border-purple-200 rounded-xl">
+  <div className="text-center">
+    <h3 className="text-3xl font-bold text-gray-900 mb-3">Take Your App to the Next Level</h3>
+    <p className="text-lg text-gray-700 mb-6 max-w-2xl mx-auto">
+      You've built the foundation. Now explore advanced features like real-time streaming, multi-language support, and custom vocabulary to create a world-class transcription experience.
+    </p>
+    <div className="flex flex-col sm:flex-row gap-4 justify-center">
+      <a
+        href="/docs/advanced-features"
+        className="inline-flex items-center justify-center px-8 py-4 bg-purple-600 text-white text-lg font-semibold rounded-lg hover:bg-purple-700 transition-colors shadow-lg"
+      >
+        Explore Advanced Features
+      </a>
+      <a
+        href="/pricing"
+        className="inline-flex items-center justify-center px-8 py-4 bg-white text-purple-600 text-lg font-semibold rounded-lg border-2 border-purple-600 hover:bg-purple-50 transition-colors"
+      >
+        View Pricing Plans
+      </a>
+    </div>
+    <p className="mt-4 text-sm text-gray-600">
+      60 minutes free every month • No credit card required • Cancel anytime
+    </p>
+  </div>
+</div>
+
+## Resources and Additional Learning
+
+- **Complete source code:** [GitHub Repository](https://github.com/whisperapi/transcription-app-tutorial)
+- **Video tutorial:** [Watch on YouTube](https://youtube.com/watch?v=placeholder)
+- **API documentation:** [WhisperAPI Docs](/docs)
+- **Community support:** [Discord Community](https://discord.gg/whisperapi)
+- **Example demos:** [Live Demo](https://demo.whisperapi.com)
+- **Blog posts:** [More tutorials](/blog) on advanced topics
+
+## Ready to Build Your Own App?
+
+Get started with WhisperAPI today and add professional-grade transcription to your applications. No infrastructure management, no model training, no complex setup—just a simple API that works.
+
+<div className="my-8 p-6 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg text-white text-center shadow-2xl">
+  <h3 className="text-2xl font-bold mb-2">Start Building Your Transcription App Today</h3>
+  <p className="mb-4 text-blue-100">Get 60 minutes of free transcription credit when you sign up. No credit card required.</p>
+  <a
+    href="/signup"
+    className="inline-block px-8 py-3 bg-white text-blue-600 font-semibold rounded-lg hover:bg-gray-100 transition-colors shadow-lg"
+  >
+    Get Your Free API Key →
+  </a>
+  <p className="mt-4 text-sm text-blue-100">
+    Join 10,000+ developers building with WhisperAPI
+  </p>
+</div>
+
+---
+
+*Have questions or want to share what you built? Tweet us [@WhisperAPI](https://twitter.com/whisperapi) or join our [Discord community](https://discord.gg/whisperapi).*

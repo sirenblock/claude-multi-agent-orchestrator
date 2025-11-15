@@ -7,35 +7,159 @@
  * - Navigation header
  * - Footer
  * - SEO metadata
+ * - Analytics tracking
+ * - Performance monitoring
  */
 
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import Link from 'next/link';
+import Script from 'next/script';
+import { Suspense } from 'react';
+import Analytics from '@/components/Analytics';
+import {
+  getOrganizationSchema,
+  getProductSchema,
+  getWebSiteSchema,
+  getHomePageBreadcrumb,
+  renderStructuredData,
+} from '@/lib/structuredData';
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+});
+
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://whisperapi.com';
+const SITE_NAME = 'WhisperAPI';
+const DESCRIPTION = 'OpenAI Whisper API powered by M4 Metal. 80% cheaper and 3x faster than cloud alternatives. Start with 60 free minutes per month.';
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#0f172a' },
+  ],
+};
 
 export const metadata: Metadata = {
-  title: 'WhisperAPI - 80% Cheaper Audio Transcription',
-  description: 'OpenAI Whisper API powered by M4 Metal. 3x faster than cloud alternatives. Start with 60 free minutes per month.',
-  keywords: ['whisper', 'transcription', 'api', 'speech-to-text', 'audio transcription', 'openai'],
-  authors: [{ name: 'WhisperAPI Team' }],
-  openGraph: {
-    title: 'WhisperAPI - 80% Cheaper Audio Transcription',
-    description: 'OpenAI Whisper API powered by M4 Metal. 3x faster than cloud alternatives.',
-    type: 'website',
-    url: 'https://whisperapi.com',
+  metadataBase: new URL(BASE_URL),
+
+  // Basic metadata
+  title: {
+    default: 'WhisperAPI - 80% Cheaper Audio Transcription API',
+    template: '%s | WhisperAPI',
   },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'WhisperAPI - 80% Cheaper Audio Transcription',
-    description: 'OpenAI Whisper API powered by M4 Metal. 3x faster than cloud alternatives.',
+  description: DESCRIPTION,
+  keywords: [
+    'whisper api',
+    'audio transcription',
+    'speech to text',
+    'openai whisper',
+    'transcription api',
+    'cheap transcription',
+    'fast transcription',
+    'm4 metal',
+    'voice to text',
+    'audio api',
+  ],
+  authors: [{ name: 'WhisperAPI Team', url: BASE_URL }],
+  creator: 'WhisperAPI',
+  publisher: 'WhisperAPI',
+
+  // Verification
+  verification: {
+    google: 'your-google-verification-code',
+    // yandex: 'your-yandex-verification-code',
+    // bing: 'your-bing-verification-code',
   },
+
+  // Robots
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
+
+  // OpenGraph
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: BASE_URL,
+    siteName: SITE_NAME,
+    title: 'WhisperAPI - 80% Cheaper Audio Transcription API',
+    description: DESCRIPTION,
+    images: [
+      {
+        url: `${BASE_URL}/og-image.png`,
+        width: 1200,
+        height: 630,
+        alt: 'WhisperAPI - Fast and Affordable Audio Transcription',
+        type: 'image/png',
+      },
+      {
+        url: `${BASE_URL}/og-image-square.png`,
+        width: 800,
+        height: 800,
+        alt: 'WhisperAPI Logo',
+        type: 'image/png',
+      },
+    ],
+  },
+
+  // Twitter
+  twitter: {
+    card: 'summary_large_image',
+    site: '@whisperapi',
+    creator: '@whisperapi',
+    title: 'WhisperAPI - 80% Cheaper Audio Transcription API',
+    description: DESCRIPTION,
+    images: [`${BASE_URL}/twitter-image.png`],
+  },
+
+  // Icons
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/icon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/icon-32x32.png', sizes: '32x32', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+    other: [
+      {
+        rel: 'mask-icon',
+        url: '/safari-pinned-tab.svg',
+        color: '#4f46e5',
+      },
+    ],
+  },
+
+  // Manifest
+  manifest: '/manifest.json',
+
+  // Alternate languages (if you support multiple languages)
+  alternates: {
+    canonical: BASE_URL,
+    languages: {
+      'en-US': BASE_URL,
+      // 'es-ES': `${BASE_URL}/es`,
+    },
+  },
+
+  // Category
+  category: 'technology',
 };
 
 function Navigation() {
@@ -168,8 +292,53 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={inter.variable}>
+      <head>
+        {/* DNS Prefetch for external resources */}
+        <link rel="dns-prefetch" href="https://www.google-analytics.com" />
+        <link rel="dns-prefetch" href="https://plausible.io" />
+
+        {/* Preconnect to critical third-party origins */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+
+        {/* Structured Data */}
+        <Script
+          id="organization-schema"
+          type="application/ld+json"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={renderStructuredData(getOrganizationSchema())}
+        />
+        <Script
+          id="product-schema"
+          type="application/ld+json"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={renderStructuredData(getProductSchema())}
+        />
+        <Script
+          id="website-schema"
+          type="application/ld+json"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={renderStructuredData(getWebSiteSchema())}
+        />
+        <Script
+          id="breadcrumb-schema"
+          type="application/ld+json"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={renderStructuredData(getHomePageBreadcrumb())}
+        />
+      </head>
       <body className={inter.className}>
+        {/* Analytics and Performance Monitoring */}
+        <Suspense fallback={null}>
+          <Analytics
+            ga4MeasurementId={process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID}
+            plausibleDomain={process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN}
+            trackWebVitals={process.env.NEXT_PUBLIC_TRACK_WEB_VITALS !== 'false'}
+            debug={process.env.NEXT_PUBLIC_ANALYTICS_DEBUG === 'true'}
+          />
+        </Suspense>
+
         <Navigation />
         <main>{children}</main>
         <Footer />

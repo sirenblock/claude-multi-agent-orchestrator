@@ -1,0 +1,126 @@
+name: Deploy Frontend to Vercel
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/deploy-frontend.yml'
+  workflow_dispatch:
+
+jobs:
+  test-dashboard:
+    name: Test Dashboard
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontend/dashboard/package-lock.json
+
+      - name: Install dependencies
+        working-directory: frontend/dashboard
+        run: npm ci
+
+      - name: Lint
+        working-directory: frontend/dashboard
+        run: npm run lint || true
+
+      - name: Build
+        working-directory: frontend/dashboard
+        env:
+          NEXT_PUBLIC_API_URL: https://api.example.com
+        run: npm run build
+
+  test-landing:
+    name: Test Landing Page
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontend/landing/package-lock.json
+
+      - name: Install dependencies
+        working-directory: frontend/landing
+        run: npm ci
+
+      - name: Lint
+        working-directory: frontend/landing
+        run: npm run lint || true
+
+      - name: Build
+        working-directory: frontend/landing
+        env:
+          NEXT_PUBLIC_API_URL: https://api.example.com
+          NEXT_PUBLIC_DASHBOARD_URL: https://dashboard.example.com
+        run: npm run build
+
+  deploy-dashboard:
+    name: Deploy Dashboard
+    runs-on: ubuntu-latest
+    needs: test-dashboard
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID_DASHBOARD }}
+          vercel-args: '--prod'
+          working-directory: frontend/dashboard
+
+  deploy-landing:
+    name: Deploy Landing Page
+    runs-on: ubuntu-latest
+    needs: test-landing
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID_LANDING }}
+          vercel-args: '--prod'
+          working-directory: frontend/landing
+
+  notify:
+    name: Notify Deployment Status
+    runs-on: ubuntu-latest
+    needs: [deploy-dashboard, deploy-landing]
+    if: always()
+
+    steps:
+      - name: Send success notification
+        if: needs.deploy-dashboard.result == 'success' && needs.deploy-landing.result == 'success'
+        run: |
+          echo "✅ Frontend deployment successful!"
+
+      - name: Send failure notification
+        if: needs.deploy-dashboard.result == 'failure' || needs.deploy-landing.result == 'failure'
+        run: |
+          echo "❌ Frontend deployment failed!"
+          exit 1
