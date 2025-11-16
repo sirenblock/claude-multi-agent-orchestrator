@@ -13,7 +13,7 @@ image: "/images/blog/audio-transcription-apis-guide-2025.jpg"
 imageAlt: "Audio transcription API workflow diagram showing audio input to text output"
 featured: true
 seo:
-  metaTitle: "Complete Guide to Audio Transcription APIs in 2025 | WhisperAPI"
+  metaTitle: "Complete Guide to Audio Transcription APIs in 2025 | Audiscribe"
   metaDescription: "Master audio transcription APIs with our comprehensive 2025 guide. Learn implementation, compare providers, explore use cases, and discover best practices with real code examples."
   ogTitle: "Complete Guide to Audio Transcription APIs in 2025"
   ogDescription: "Everything you need to know about audio transcription APIs: how they work, use cases, provider comparison, and best practices with code examples."
@@ -23,7 +23,7 @@ seo:
   twitterTitle: "Complete Guide to Audio Transcription APIs in 2025"
   twitterDescription: "Master audio transcription APIs with our comprehensive guide. Learn implementation, compare providers, and discover best practices."
   twitterImage: "/images/blog/twitter-audio-transcription-apis-guide-2025.jpg"
-  canonicalUrl: "https://whisperapi.com/blog/complete-guide-audio-transcription-apis-2025"
+  canonicalUrl: "https://audiscribe.com/blog/complete-guide-audio-transcription-apis-2025"
 schema:
   type: "BlogPosting"
   headline: "Complete Guide to Audio Transcription APIs in 2025"
@@ -34,13 +34,13 @@ schema:
     name: "Sarah Chen"
   publisher:
     type: "Organization"
-    name: "WhisperAPI"
+    name: "Audiscribe"
     logo:
       type: "ImageObject"
-      url: "https://whisperapi.com/images/logo.png"
-  image: "https://whisperapi.com/images/blog/audio-transcription-apis-guide-2025.jpg"
+      url: "https://audiscribe.com/images/logo.png"
+  image: "https://audiscribe.com/images/blog/audio-transcription-apis-guide-2025.jpg"
   description: "Discover everything you need to know about audio transcription APIs in 2025. Learn how they work, explore use cases, compare providers, and implement best practices with code examples."
-  mainEntityOfPage: "https://whisperapi.com/blog/complete-guide-audio-transcription-apis-2025"
+  mainEntityOfPage: "https://audiscribe.com/blog/complete-guide-audio-transcription-apis-2025"
 ---
 
 # Complete Guide to Audio Transcription APIs in 2025
@@ -51,7 +51,7 @@ In this comprehensive guide, we'll explore everything you need to know about **a
 
 The audio transcription API market has matured significantly, with providers offering unprecedented accuracy rates exceeding 95% for clean audio, support for over 100 languages, real-time streaming capabilities, and advanced features like **speaker diarization**, **custom vocabulary**, and profanity filtering. As we dive into this guide, you'll discover how to leverage these powerful capabilities in your own applications.
 
-**New to audio transcription?** Start with our [WhisperAPI Quickstart Guide](/blog/whisperapi-quickstart-guide-5-minutes) to make your first API call in 5 minutes.
+**New to audio transcription?** Start with our [Audiscribe Quickstart Guide](/blog/whisperapi-quickstart-guide-5-minutes) to make your first API call in 5 minutes.
 
 ## What is an Audio Transcription API?
 
@@ -309,7 +309,7 @@ Transcription costs accumulate quickly at scale:
 - What are the implications of per-minute vs. per-request pricing for your content mix?
 - Are there additional costs for premium features like diarization or custom models?
 
-Check out our [pricing page](/pricing) to see how WhisperAPI offers competitive, transparent pricing for all project sizes.
+Check out our [pricing page](/pricing) to see how Audiscribe offers competitive, transparent pricing for all project sizes.
 
 **5. Feature Set**
 
@@ -369,7 +369,7 @@ Growth requires infrastructure that scales with your needs:
 
 Here's a comparison of leading audio transcription API providers in 2025:
 
-| Feature | WhisperAPI | Google Speech-to-Text | Amazon Transcribe | Assembly AI | Rev AI |
+| Feature | Audiscribe | Google Speech-to-Text | Amazon Transcribe | Assembly AI | Rev AI |
 |---------|------------|----------------------|-------------------|-------------|--------|
 | **Base Accuracy** | 96-98% | 95-97% | 94-96% | 95-97% | 94-96% |
 | **Languages** | 100+ | 125+ | 100+ | 50+ | 36 |
@@ -394,7 +394,7 @@ To select the best API for your needs:
 5. **Review compliance requirements**: Ensure the provider meets your security and regulatory needs
 6. **Consider vendor lock-in**: Understand how easy it would be to switch providers if needed
 
-For most modern applications requiring high accuracy, extensive language support, and developer-friendly integration, WhisperAPI offers an excellent balance of performance, features, and cost-effectiveness. [Try WhisperAPI free](/signup) with 60 minutes of transcription to experience the difference.
+For most modern applications requiring high accuracy, extensive language support, and developer-friendly integration, Audiscribe offers an excellent balance of performance, features, and cost-effectiveness. [Try Audiscribe free](/signup) with 60 minutes of transcription to experience the difference.
 
 ## Best Practices for Audio Transcription API Integration
 
@@ -462,10 +462,10 @@ import requests
 import time
 import os
 
-class WhisperAPIClient:
+class AudiscribeClient:
     def __init__(self, api_key):
         self.api_key = api_key
-        self.base_url = "https://api.whisperapi.com/v1"
+        self.base_url = "https://api.audiscribe.com/v1"
         self.headers = {
             "Authorization": f"Bearer {api_key}",
             "Content-Type": "application/json"
@@ -536,14 +536,14 @@ class WhisperAPIClient:
         return self.get_transcription(job_id)
 
 # Usage
-client = WhisperAPIClient(api_key=os.environ['WHISPER_API_KEY'])
+client = AudiscribeClient(api_key=os.environ['WHISPER_API_KEY'])
 
 result = client.transcribe_and_wait(
     'meeting_recording.wav',
     options={
         'language': 'en',
         'enable_diarization': True,
-        'custom_vocabulary': ['WhisperAPI', 'API', 'transcription']
+        'custom_vocabulary': ['Audiscribe', 'API', 'transcription']
     }
 )
 
@@ -554,7 +554,7 @@ print(f"Confidence: {result['confidence']}")
 **Real-Time Streaming Example (JavaScript)**:
 
 ```javascript
-class WhisperAPIStreamer {
+class AudiscribeStreamer {
   constructor(apiKey) {
     this.apiKey = apiKey;
     this.ws = null;
@@ -574,7 +574,7 @@ class WhisperAPIStreamer {
 
     // Establish WebSocket connection
     this.ws = new WebSocket(
-      `wss://api.whisperapi.com/v1/stream?` +
+      `wss://api.audiscribe.com/v1/stream?` +
       new URLSearchParams(config).toString()
     );
 
@@ -640,7 +640,7 @@ async function startLiveTranscription() {
     }
   });
 
-  const streamer = new WhisperAPIStreamer(process.env.WHISPER_API_KEY);
+  const streamer = new AudiscribeStreamer(process.env.WHISPER_API_KEY);
 
   streamer.onTranscript = (data) => {
     console.log(`${data.isFinal ? 'Final' : 'Interim'}: ${data.text}`);
@@ -710,7 +710,7 @@ def transcribe_with_retry(
         try:
             with open(audio_path, 'rb') as audio_file:
                 response = requests.post(
-                    'https://api.whisperapi.com/v1/transcriptions',
+                    'https://api.audiscribe.com/v1/transcriptions',
                     headers={'Authorization': f'Bearer {api_key}'},
                     files={'file': audio_file},
                     timeout=30
@@ -774,7 +774,7 @@ Improve accuracy for domain-specific terminology:
 
 ```python
 def transcribe_with_custom_vocabulary(
-    client: WhisperAPIClient,
+    client: AudiscribeClient,
     audio_path: str,
     domain: str = 'general'
 ):
@@ -1022,9 +1022,9 @@ The audio transcription landscape continues to evolve rapidly. Emerging trends f
 - **Tighter integration** with other AI capabilities like summarization and sentiment analysis
 - **Edge deployment** enabling on-device transcription for privacy and offline use
 
-### Getting Started with WhisperAPI
+### Getting Started with Audiscribe
 
-Ready to integrate audio transcription into your application? WhisperAPI provides a developer-friendly, accurate, and cost-effective solution with:
+Ready to integrate audio transcription into your application? Audiscribe provides a developer-friendly, accurate, and cost-effective solution with:
 
 - **96-98% accuracy** across 100+ languages
 - **Real-time streaming** and batch processing
@@ -1037,20 +1037,20 @@ Ready to integrate audio transcription into your application? WhisperAPI provide
 
 ### Additional Resources
 
-- [WhisperAPI Documentation](/docs) - Comprehensive integration guides
+- [Audiscribe Documentation](/docs) - Comprehensive integration guides
 - [API Reference](/docs/api-reference) - Complete endpoint documentation
 - [Pricing Calculator](/pricing) - Estimate your monthly costs
 - [GitHub Examples](https://github.com/whisperapi/examples) - Sample code and integrations
-- [Community Forum](https://community.whisperapi.com) - Ask questions and share insights
+- [Community Forum](https://community.audiscribe.com) - Ask questions and share insights
 
 ---
 
 **About the Author**
 
-Sarah Chen is a Senior Developer Advocate at WhisperAPI with over 8 years of experience building AI-powered applications. She specializes in speech recognition, natural language processing, and developer education. Connect with Sarah on [Twitter](https://twitter.com/sarahchen) or [LinkedIn](https://linkedin.com/in/sarahchen).
+Sarah Chen is a Senior Developer Advocate at Audiscribe with over 8 years of experience building AI-powered applications. She specializes in speech recognition, natural language processing, and developer education. Connect with Sarah on [Twitter](https://twitter.com/sarahchen) or [LinkedIn](https://linkedin.com/in/sarahchen).
 
 ---
 
-*Have questions about audio transcription APIs? [Contact our team](/contact) or join our [community forum](https://community.whisperapi.com) to connect with other developers.*
+*Have questions about audio transcription APIs? [Contact our team](/contact) or join our [community forum](https://community.audiscribe.com) to connect with other developers.*
 
-**Ready to get started?** [Try WhisperAPI free today](/signup) and transform audio into text with just a few lines of code.
+**Ready to get started?** [Try Audiscribe free today](/signup) and transform audio into text with just a few lines of code.

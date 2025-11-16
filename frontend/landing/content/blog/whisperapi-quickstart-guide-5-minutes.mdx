@@ -1,44 +1,44 @@
 ---
-title: "WhisperAPI Quickstart Guide: Get Started in 5 Minutes"
-description: "Complete WhisperAPI tutorial with code examples in Python, Node.js, JavaScript, and curl. Learn how to transcribe audio files in minutes with our step-by-step quickstart guide."
+title: "Audiscribe Quickstart Guide: Get Started in 5 Minutes"
+description: "Complete Audiscribe tutorial with code examples in Python, Node.js, JavaScript, and curl. Learn how to transcribe audio files in minutes with our step-by-step quickstart guide."
 date: "2024-01-18"
-author: "WhisperAPI Team"
+author: "Audiscribe Team"
 category: "Tutorial"
 tags: ["whisperapi tutorial", "quickstart", "api integration", "speech to text", "getting started"]
 readingTime: "10 min read"
 image: "/blog/whisperapi-quickstart-cover.jpg"
 featured: true
 seo:
-  metaTitle: "WhisperAPI Tutorial: Complete Quickstart Guide in 5 Minutes | Code Examples"
-  metaDescription: "Learn how to use WhisperAPI with our comprehensive tutorial. Includes code examples in Python, Node.js, JavaScript, and curl. Start transcribing audio in 5 minutes."
+  metaTitle: "Audiscribe Tutorial: Complete Quickstart Guide in 5 Minutes | Code Examples"
+  metaDescription: "Learn how to use Audiscribe with our comprehensive tutorial. Includes code examples in Python, Node.js, JavaScript, and curl. Start transcribing audio in 5 minutes."
   keywords: "whisperapi tutorial, whisperapi quickstart, audio transcription api, speech to text api, whisperapi guide, whisperapi examples"
   ogImage: "/blog/whisperapi-quickstart-og.jpg"
   ogType: "article"
   twitterCard: "summary_large_image"
 ---
 
-# WhisperAPI Quickstart Guide: Get Started in 5 Minutes
+# Audiscribe Quickstart Guide: Get Started in 5 Minutes
 
-Welcome to the WhisperAPI quickstart guide! Whether you're building a podcast transcription service, adding voice notes to your application, or creating an accessibility tool, WhisperAPI makes it incredibly simple to convert speech to text with state-of-the-art accuracy.
+Welcome to the Audiscribe quickstart guide! Whether you're building a podcast transcription service, adding voice notes to your application, or creating an accessibility tool, Audiscribe makes it incredibly simple to convert speech to text with state-of-the-art accuracy.
 
-In this comprehensive tutorial, you'll learn everything you need to get started with WhisperAPI in just 5 minutes. We'll walk through account setup, authentication, and making your first API call. You'll find complete code examples in four popular programming languages (Python, Node.js, JavaScript, and curl), troubleshooting tips, and best practices to help you build production-ready applications.
+In this comprehensive tutorial, you'll learn everything you need to get started with Audiscribe in just 5 minutes. We'll walk through account setup, authentication, and making your first API call. You'll find complete code examples in four popular programming languages (Python, Node.js, JavaScript, and curl), troubleshooting tips, and best practices to help you build production-ready applications.
 
-By the end of this guide, you'll have successfully transcribed your first audio file and understand how to integrate WhisperAPI into your own projects. Whether you're a complete beginner or an experienced developer, this step-by-step tutorial will get you up and running quickly.
+By the end of this guide, you'll have successfully transcribed your first audio file and understand how to integrate Audiscribe into your own projects. Whether you're a complete beginner or an experienced developer, this step-by-step tutorial will get you up and running quickly.
 
 **Ready to transform audio into text?** Let's dive in and make your first API call within the next few minutes.
 
 ## Account Setup
 
-Setting up your WhisperAPI account is quick and straightforward. Follow these steps to get started:
+Setting up your Audiscribe account is quick and straightforward. Follow these steps to get started:
 
 ### Create Your Account
 
-1. **Visit the signup page**: Navigate to [WhisperAPI Signup](/signup) and click "Get Started Free"
+1. **Visit the signup page**: Navigate to [Audiscribe Signup](/signup) and click "Get Started Free"
 2. **Choose your plan**: Start with our generous free tier that includes 100 minutes of transcription per month—perfect for testing and small projects
 3. **Enter your details**: Provide your email address, create a secure password, and verify your email
 4. **Complete verification**: Check your inbox for a verification email and click the confirmation link
 
-![WhisperAPI Signup Dashboard](/blog/screenshots/whisperapi-signup-dashboard.png)
+![Audiscribe Signup Dashboard](/blog/screenshots/whisperapi-signup-dashboard.png)
 
 ### Understanding the Dashboard
 
@@ -52,7 +52,7 @@ Once you log in, you'll see your dashboard with several key sections:
 
 ### Choose Your Plan
 
-WhisperAPI offers flexible pricing to match your needs:
+Audiscribe offers flexible pricing to match your needs:
 
 - **Free Tier**: 100 minutes/month, perfect for testing and development
 - **Starter Plan**: $29/month for 1,000 minutes with priority support
@@ -61,13 +61,13 @@ WhisperAPI offers flexible pricing to match your needs:
 
 All plans include the same high-quality transcription accuracy, multiple language support (95+ languages), and advanced features like speaker diarization and timestamps. You can upgrade or downgrade your plan anytime directly from your dashboard.
 
-**Pro Tip**: Start with the free tier to test WhisperAPI with your use case before committing to a paid plan. Most developers find they can build and test their entire integration within the free quota.
+**Pro Tip**: Start with the free tier to test Audiscribe with your use case before committing to a paid plan. Most developers find they can build and test their entire integration within the free quota.
 
-![WhisperAPI Pricing Tiers](/blog/screenshots/whisperapi-pricing-dashboard.png)
+![Audiscribe Pricing Tiers](/blog/screenshots/whisperapi-pricing-dashboard.png)
 
 ## Get Your API Key
 
-Your API key is the credential you'll use to authenticate all requests to WhisperAPI. Here's how to generate and manage your keys securely.
+Your API key is the credential you'll use to authenticate all requests to Audiscribe. Here's how to generate and manage your keys securely.
 
 ### Generating Your First API Key
 
@@ -113,7 +113,7 @@ Let's make your first transcription request using curl—a simple command-line t
 Here's the simplest possible transcription request. Save an audio file (MP3, WAV, M4A, or other supported formats) and run this command:
 
 ```bash
-curl -X POST https://api.whisperapi.com/v1/transcribe \
+curl -X POST https://api.audiscribe.com/v1/transcribe \
   -H "Authorization: Bearer wsk_live_YOUR_API_KEY_HERE" \
   -F "file=@/path/to/your/audio.mp3" \
   -F "language=en"
@@ -129,7 +129,7 @@ You'll receive a JSON response that looks like this:
 {
   "id": "txn_1234567890abcdef",
   "status": "completed",
-  "text": "Welcome to WhisperAPI. This is your first transcription.",
+  "text": "Welcome to Audiscribe. This is your first transcription.",
   "language": "en",
   "duration": 3.5,
   "segments": [
@@ -137,7 +137,7 @@ You'll receive a JSON response that looks like this:
       "id": 0,
       "start": 0.0,
       "end": 1.5,
-      "text": "Welcome to WhisperAPI.",
+      "text": "Welcome to Audiscribe.",
       "confidence": 0.98
     },
     {
@@ -164,7 +164,7 @@ You'll receive a JSON response that looks like this:
 Enhance your transcription with additional parameters:
 
 ```bash
-curl -X POST https://api.whisperapi.com/v1/transcribe \
+curl -X POST https://api.audiscribe.com/v1/transcribe \
   -H "Authorization: Bearer wsk_live_YOUR_API_KEY_HERE" \
   -F "file=@/path/to/your/audio.mp3" \
   -F "language=en" \
@@ -182,21 +182,21 @@ curl -X POST https://api.whisperapi.com/v1/transcribe \
 
 ### Testing Different Audio Formats
 
-WhisperAPI supports a wide range of audio formats. Test with different file types:
+Audiscribe supports a wide range of audio formats. Test with different file types:
 
 ```bash
 # MP3 audio
-curl -X POST https://api.whisperapi.com/v1/transcribe \
+curl -X POST https://api.audiscribe.com/v1/transcribe \
   -H "Authorization: Bearer wsk_live_YOUR_API_KEY_HERE" \
   -F "file=@podcast.mp3"
 
 # WAV audio
-curl -X POST https://api.whisperapi.com/v1/transcribe \
+curl -X POST https://api.audiscribe.com/v1/transcribe \
   -H "Authorization: Bearer wsk_live_YOUR_API_KEY_HERE" \
   -F "file=@recording.wav"
 
 # M4A audio (common for voice memos)
-curl -X POST https://api.whisperapi.com/v1/transcribe \
+curl -X POST https://api.audiscribe.com/v1/transcribe \
   -H "Authorization: Bearer wsk_live_YOUR_API_KEY_HERE" \
   -F "file=@voice-note.m4a"
 ```
@@ -207,11 +207,11 @@ curl -X POST https://api.whisperapi.com/v1/transcribe \
 
 ![curl Command Success Response](/blog/screenshots/whisperapi-curl-success.png)
 
-**Congratulations!** You've made your first successful API call. Now let's explore how to integrate WhisperAPI into your applications using popular programming languages.
+**Congratulations!** You've made your first successful API call. Now let's explore how to integrate Audiscribe into your applications using popular programming languages.
 
 ## Python Example
 
-Python is one of the most popular languages for working with APIs. Here's a complete guide to integrating WhisperAPI into your Python applications.
+Python is one of the most popular languages for working with APIs. Here's a complete guide to integrating Audiscribe into your Python applications.
 
 ### Installation
 
@@ -235,11 +235,11 @@ load_dotenv()
 
 # Your API key from environment variable
 API_KEY = os.getenv('WHISPERAPI_KEY')
-API_URL = 'https://api.whisperapi.com/v1/transcribe'
+API_URL = 'https://api.audiscribe.com/v1/transcribe'
 
 def transcribe_audio(file_path, language='en'):
     """
-    Transcribe an audio file using WhisperAPI
+    Transcribe an audio file using Audiscribe
 
     Args:
         file_path (str): Path to the audio file
@@ -296,12 +296,12 @@ import json
 from typing import Optional, Dict, List
 from pathlib import Path
 
-class WhisperAPIClient:
-    """WhisperAPI client with error handling and advanced features"""
+class AudiscribeClient:
+    """Audiscribe client with error handling and advanced features"""
 
     def __init__(self, api_key: str):
         self.api_key = api_key
-        self.base_url = 'https://api.whisperapi.com/v1'
+        self.base_url = 'https://api.audiscribe.com/v1'
         self.session = requests.Session()
         self.session.headers.update({
             'Authorization': f'Bearer {api_key}'
@@ -373,7 +373,7 @@ class WhisperAPIClient:
 
 # Example usage
 if __name__ == '__main__':
-    client = WhisperAPIClient(api_key=os.getenv('WHISPERAPI_KEY'))
+    client = AudiscribeClient(api_key=os.getenv('WHISPERAPI_KEY'))
 
     result = client.transcribe(
         'interview.mp3',
@@ -395,7 +395,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 def batch_transcribe(audio_files: List[str], max_workers: int = 3):
     """Transcribe multiple files in parallel"""
-    client = WhisperAPIClient(api_key=os.getenv('WHISPERAPI_KEY'))
+    client = AudiscribeClient(api_key=os.getenv('WHISPERAPI_KEY'))
     results = {}
 
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
@@ -429,7 +429,7 @@ results = batch_transcribe(audio_files)
 
 ## Node.js Example
 
-Node.js developers can easily integrate WhisperAPI using the built-in fetch API or popular libraries. Here's everything you need to know.
+Node.js developers can easily integrate Audiscribe using the built-in fetch API or popular libraries. Here's everything you need to know.
 
 ### Installation
 
@@ -451,7 +451,7 @@ const fetch = require('node-fetch');
 require('dotenv').config();
 
 const API_KEY = process.env.WHISPERAPI_KEY;
-const API_URL = 'https://api.whisperapi.com/v1/transcribe';
+const API_URL = 'https://api.audiscribe.com/v1/transcribe';
 
 async function transcribeAudio(filePath, language = 'en') {
   const form = new FormData();
@@ -507,10 +507,10 @@ const path = require('path');
 const FormData = require('form-data');
 const fetch = require('node-fetch');
 
-class WhisperAPIClient {
+class AudiscribeClient {
   constructor(apiKey) {
     this.apiKey = apiKey;
-    this.baseUrl = 'https://api.whisperapi.com/v1';
+    this.baseUrl = 'https://api.audiscribe.com/v1';
   }
 
   async transcribe(filePath, options = {}) {
@@ -579,7 +579,7 @@ const app = express();
 
 app.post('/api/transcribe', upload.single('audio'), async (req, res) => {
   try {
-    const client = new WhisperAPIClient(process.env.WHISPERAPI_KEY);
+    const client = new AudiscribeClient(process.env.WHISPERAPI_KEY);
     const result = await client.transcribe(req.file.path, {
       language: req.body.language || 'en'
     });
@@ -604,7 +604,7 @@ Process transcription results as they arrive:
 
 ```javascript
 async function transcribeWithProgress(filePath) {
-  const client = new WhisperAPIClient(process.env.WHISPERAPI_KEY);
+  const client = new AudiscribeClient(process.env.WHISPERAPI_KEY);
 
   console.log('Starting transcription...');
   const startTime = Date.now();
@@ -636,7 +636,7 @@ async function transcribeWithProgress(filePath) {
 
 ## JavaScript (Browser) Example
 
-Building a browser-based transcription interface is simple with WhisperAPI. Here's how to create a modern, client-side application.
+Building a browser-based transcription interface is simple with Audiscribe. Here's how to create a modern, client-side application.
 
 ### HTML Upload Form
 
@@ -648,7 +648,7 @@ Create a simple HTML interface:
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WhisperAPI Browser Demo</title>
+  <title>Audiscribe Browser Demo</title>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -687,7 +687,7 @@ Create a simple HTML interface:
   </style>
 </head>
 <body>
-  <h1>WhisperAPI Browser Demo</h1>
+  <h1>Audiscribe Browser Demo</h1>
 
   <div class="upload-zone" id="uploadZone">
     <input type="file" id="audioFile" accept="audio/*" style="display: none">
@@ -710,9 +710,9 @@ Create `transcribe.js`:
 ```javascript
 // Note: In production, use a backend proxy to secure your API key
 const API_KEY = 'wsk_live_YOUR_API_KEY_HERE'; // Never expose in production!
-const API_URL = 'https://api.whisperapi.com/v1/transcribe';
+const API_URL = 'https://api.audiscribe.com/v1/transcribe';
 
-class WhisperAPIClient {
+class AudiscribeClient {
   constructor(apiKey) {
     this.apiKey = apiKey;
   }
@@ -780,7 +780,7 @@ async function processAudioFile(file) {
   resultDiv.style.display = 'none';
 
   try {
-    const client = new WhisperAPIClient(API_KEY);
+    const client = new AudiscribeClient(API_KEY);
     const result = await client.transcribe(file);
 
     displayResult(result);
@@ -849,7 +849,7 @@ function TranscriptionApp() {
     formData.append('language', 'en');
 
     try {
-      const response = await fetch('https://api.whisperapi.com/v1/transcribe', {
+      const response = await fetch('https://api.audiscribe.com/v1/transcribe', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${process.env.REACT_APP_WHISPERAPI_KEY}`
@@ -980,7 +980,7 @@ response = requests.post(API_URL, timeout=300)  # 5 minutes
 **Solution:** Explicitly specify the language parameter:
 
 ```bash
-curl -X POST https://api.whisperapi.com/v1/transcribe \
+curl -X POST https://api.audiscribe.com/v1/transcribe \
   -H "Authorization: Bearer $API_KEY" \
   -F "file=@audio.mp3" \
   -F "language=es"  # Spanish
@@ -990,7 +990,7 @@ curl -X POST https://api.whisperapi.com/v1/transcribe \
 
 ## Next Steps
 
-Congratulations! You've successfully made your first WhisperAPI calls and learned how to integrate transcription into your applications. Here's what to explore next:
+Congratulations! You've successfully made your first Audiscribe calls and learned how to integrate transcription into your applications. Here's what to explore next:
 
 ### Explore Advanced Features
 
@@ -1001,7 +1001,7 @@ Congratulations! You've successfully made your first WhisperAPI calls and learne
 
 ### Build Something Amazing
 
-Get inspired by what others have built with WhisperAPI:
+Get inspired by what others have built with Audiscribe:
 
 - **Podcast Platforms**: Automated episode transcription for better SEO and accessibility
 - **Meeting Assistants**: Real-time note-taking and action item extraction
@@ -1014,11 +1014,11 @@ Get inspired by what others have built with WhisperAPI:
 - **[Code Examples Repository](https://github.com/whisperapi/examples)**: 20+ production-ready examples
 - **[Postman Collection](https://www.postman.com/whisperapi/workspace)**: Import and test all API endpoints
 - **[Video Tutorials](/tutorials)**: Step-by-step visual guides and advanced techniques
-- **[Community Forum](https://community.whisperapi.com)**: Connect with other developers and share tips
+- **[Community Forum](https://community.audiscribe.com)**: Connect with other developers and share tips
 
 ### Download Our Postman Collection
 
-Test all WhisperAPI endpoints instantly with our comprehensive Postman collection:
+Test all Audiscribe endpoints instantly with our comprehensive Postman collection:
 
 [**Download Postman Collection →**](https://www.postman.com/whisperapi/workspace/whisperapi-collection)
 
@@ -1031,13 +1031,13 @@ The collection includes:
 
 ### Start Building Now
 
-Ready to integrate WhisperAPI into your production application?
+Ready to integrate Audiscribe into your production application?
 
 **[Create your free account →](/signup)** and get 100 minutes of transcription to start building today.
 
 **[View pricing plans →](/pricing)** to find the perfect plan for your needs.
 
-**[Schedule a demo →](/demo)** to see WhisperAPI in action with our solutions engineers.
+**[Schedule a demo →](/demo)** to see Audiscribe in action with our solutions engineers.
 
 ### Stay Updated
 
@@ -1045,8 +1045,8 @@ Ready to integrate WhisperAPI into your production application?
 - **[Follow us on Twitter](https://twitter.com/whisperapi)**: Latest updates and community highlights
 - **[Join our Discord](https://discord.gg/whisperapi)**: Real-time help and networking
 
-**Questions?** Our support team is here to help at [support@whisperapi.com](mailto:support@whisperapi.com)
+**Questions?** Our support team is here to help at [support@audiscribe.com](mailto:support@audiscribe.com)
 
 ---
 
-**You're now ready to build powerful transcription features into your applications.** We can't wait to see what you create with WhisperAPI!
+**You're now ready to build powerful transcription features into your applications.** We can't wait to see what you create with Audiscribe!

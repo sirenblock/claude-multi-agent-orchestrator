@@ -1,7 +1,7 @@
 {
-  "name": "whisperapi-landing",
+  "name": "audiscribe-landing",
   "version": "1.0.0",
-  "description": "WhisperAPI Landing Page - Conversion-focused marketing site",
+  "description": "Audiscribe Landing Page - Conversion-focused marketing site",
   "private": true,
   "scripts": {
     "dev": "next dev -p 3002",

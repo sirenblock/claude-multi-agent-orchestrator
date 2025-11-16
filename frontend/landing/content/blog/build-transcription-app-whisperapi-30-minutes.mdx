@@ -1,51 +1,51 @@
 ---
-title: "How to Build a Transcription App with WhisperAPI in 30 Minutes"
-description: "Step-by-step tutorial to build a complete transcription app using WhisperAPI. Learn frontend, backend, and deployment with code examples and GitHub repo."
+title: "How to Build a Transcription App with Audiscribe in 30 Minutes"
+description: "Step-by-step tutorial to build a complete transcription app using Audiscribe. Learn frontend, backend, and deployment with code examples and GitHub repo."
 publishedAt: "2025-01-15"
 updatedAt: "2025-01-15"
-author: "WhisperAPI Team"
+author: "Audiscribe Team"
 authorTitle: "Developer Relations"
 authorImage: "/images/authors/whisperapi-team.jpg"
 readingTime: "15 min read"
 category: "Tutorial"
 tags: ["tutorial", "build transcription app", "web development", "whisperapi", "javascript", "react", "node.js", "api integration"]
 image: "/images/blog/build-transcription-app-cover.jpg"
-imageAlt: "Code editor showing transcription app development with WhisperAPI"
+imageAlt: "Code editor showing transcription app development with Audiscribe"
 featured: true
 seo:
-  metaTitle: "Build a Transcription App with WhisperAPI in 30 Minutes | Complete Tutorial 2025"
-  metaDescription: "Learn how to build a transcription app from scratch using WhisperAPI. Complete step-by-step tutorial with frontend, backend code examples, deployment guide, and troubleshooting tips."
-  ogTitle: "Build a Transcription App with WhisperAPI in 30 Minutes"
+  metaTitle: "Build a Transcription App with Audiscribe in 30 Minutes | Complete Tutorial 2025"
+  metaDescription: "Learn how to build a transcription app from scratch using Audiscribe. Complete step-by-step tutorial with frontend, backend code examples, deployment guide, and troubleshooting tips."
+  ogTitle: "Build a Transcription App with Audiscribe in 30 Minutes"
   ogDescription: "Complete tutorial with working code examples, deployment guide, and best practices for building a production-ready transcription application."
   ogImage: "/images/blog/og-build-transcription-app.jpg"
   ogType: "article"
   twitterCard: "summary_large_image"
-  twitterTitle: "Build a Transcription App in 30 Minutes with WhisperAPI"
+  twitterTitle: "Build a Transcription App in 30 Minutes with Audiscribe"
   twitterDescription: "Step-by-step tutorial with complete code examples and deployment guide"
   twitterImage: "/images/blog/twitter-build-transcription-app.jpg"
-  canonicalUrl: "https://whisperapi.com/blog/build-transcription-app-whisperapi-30-minutes"
+  canonicalUrl: "https://audiscribe.com/blog/build-transcription-app-whisperapi-30-minutes"
 schema:
   type: "TechArticle"
-  headline: "How to Build a Transcription App with WhisperAPI in 30 Minutes"
+  headline: "How to Build a Transcription App with Audiscribe in 30 Minutes"
   datePublished: "2025-01-15"
   dateModified: "2025-01-15"
   author:
     type: "Organization"
-    name: "WhisperAPI Team"
+    name: "Audiscribe Team"
   publisher:
     type: "Organization"
-    name: "WhisperAPI"
+    name: "Audiscribe"
     logo:
       type: "ImageObject"
-      url: "https://whisperapi.com/images/logo.png"
-  image: "https://whisperapi.com/images/blog/build-transcription-app-cover.jpg"
-  description: "Step-by-step tutorial to build a complete transcription app using WhisperAPI. Learn frontend, backend, and deployment with code examples and GitHub repo."
-  mainEntityOfPage: "https://whisperapi.com/blog/build-transcription-app-whisperapi-30-minutes"
+      url: "https://audiscribe.com/images/logo.png"
+  image: "https://audiscribe.com/images/blog/build-transcription-app-cover.jpg"
+  description: "Step-by-step tutorial to build a complete transcription app using Audiscribe. Learn frontend, backend, and deployment with code examples and GitHub repo."
+  mainEntityOfPage: "https://audiscribe.com/blog/build-transcription-app-whisperapi-30-minutes"
 ---
 
-# How to Build a Transcription App with WhisperAPI in 30 Minutes
+# How to Build a Transcription App with Audiscribe in 30 Minutes
 
-Building a professional transcription application used to take weeks of development time. With WhisperAPI, you can create a fully functional, production-ready transcription app in just 30 minutes. This comprehensive tutorial will walk you through every step, from setting up your development environment to deploying your app to production.
+Building a professional transcription application used to take weeks of development time. With Audiscribe, you can create a fully functional, production-ready transcription app in just 30 minutes. This comprehensive tutorial will walk you through every step, from setting up your development environment to deploying your app to production.
 
 Whether you're a seasoned developer looking to add transcription capabilities to your product or a beginner wanting to build your first AI-powered application, this guide has you covered. By the end of this tutorial, you'll have a working transcription app that can handle audio files, display real-time results, and provide downloadable transcripts.
 
@@ -61,7 +61,7 @@ Our transcription app will include:
 - **Responsive design** that works on all devices
 - **Secure API integration** with proper error handling
 
-The complete source code is available on [GitHub](https://github.com/whisperapi/transcription-app-tutorial), and you can see a [live demo here](https://transcription-demo.whisperapi.com).
+The complete source code is available on [GitHub](https://github.com/whisperapi/transcription-app-tutorial), and you can see a [live demo here](https://transcription-demo.audiscribe.com).
 
 ## Video Tutorial
 
@@ -72,7 +72,7 @@ Prefer video? Watch our step-by-step video tutorial:
     width="100%"
     height="100%"
     src="https://www.youtube.com/embed/placeholder"
-    title="Build a Transcription App with WhisperAPI - Complete Tutorial"
+    title="Build a Transcription App with Audiscribe - Complete Tutorial"
     frameBorder="0"
     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
     allowFullScreen
@@ -87,7 +87,7 @@ Prefer video? Watch our step-by-step video tutorial:
 Before we start, make sure you have:
 
 - **Node.js** (v16 or higher) and npm installed
-- **WhisperAPI account** with API key ([sign up here](/signup))
+- **Audiscribe account** with API key ([sign up here](/signup))
 - **Basic JavaScript/React knowledge**
 - **Text editor** (VS Code recommended)
 - **Terminal/Command line** access
@@ -163,9 +163,9 @@ transcription-app/
 Create a `.env` file in your project root:
 
 ```env
-# WhisperAPI Configuration
+# Audiscribe Configuration
 WHISPERAPI_KEY=your_api_key_here
-WHISPERAPI_ENDPOINT=https://api.whisperapi.com/v1
+WHISPERAPI_ENDPOINT=https://api.audiscribe.com/v1
 
 # Server Configuration
 PORT=3000
@@ -177,16 +177,16 @@ FRONTEND_URL=http://localhost:3000
 
 ## Step 2: Backend Implementation (10 minutes)
 
-Now let's build the backend server that will handle file uploads and communicate with WhisperAPI.
+Now let's build the backend server that will handle file uploads and communicate with Audiscribe.
 
-### Create the WhisperAPI Client
+### Create the Audiscribe Client
 
 Create `backend/utils/whisperapi.js`:
 
 ```javascript
 const axios = require('axios');
 
-class WhisperAPIClient {
+class AudiscribeClient {
   constructor(apiKey) {
     this.apiKey = apiKey;
     this.baseURL = process.env.WHISPERAPI_ENDPOINT;
@@ -214,7 +214,7 @@ class WhisperAPIClient {
       const response = await this.client.post('/transcribe', formData);
       return response.data;
     } catch (error) {
-      console.error('WhisperAPI Error:', error.response?.data || error.message);
+      console.error('Audiscribe Error:', error.response?.data || error.message);
       throw new Error(error.response?.data?.message || 'Transcription failed');
     }
   }
@@ -241,7 +241,7 @@ class WhisperAPIClient {
   }
 }
 
-module.exports = WhisperAPIClient;
+module.exports = AudiscribeClient;
 ```
 
 ### Create Express Server
@@ -255,7 +255,7 @@ const cors = require('cors');
 const path = require('path');
 require('dotenv').config();
 
-const WhisperAPIClient = require('./utils/whisperapi');
+const AudiscribeClient = require('./utils/whisperapi');
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -288,8 +288,8 @@ const upload = multer({
   }
 });
 
-// Initialize WhisperAPI client
-const whisperClient = new WhisperAPIClient(process.env.WHISPERAPI_KEY);
+// Initialize Audiscribe client
+const whisperClient = new AudiscribeClient(process.env.WHISPERAPI_KEY);
 
 // Routes
 app.post('/api/transcribe', upload.single('audio'), async (req, res) => {
@@ -371,7 +371,7 @@ app.listen(port, () => {
 <div className="my-12 p-8 bg-gradient-to-br from-blue-50 to-purple-50 border-2 border-blue-200 rounded-xl">
   <h3 className="text-2xl font-bold text-gray-900 mb-3">🎉 Backend Complete!</h3>
   <p className="text-gray-700 mb-4">
-    Great progress! You now have a fully functional backend server. Before moving to the frontend, make sure you have your WhisperAPI key ready.
+    Great progress! You now have a fully functional backend server. Before moving to the frontend, make sure you have your Audiscribe key ready.
   </p>
   <div className="flex flex-col sm:flex-row gap-4">
     <a
@@ -512,7 +512,7 @@ export default function ProgressBar({ progress, fileName }: ProgressBarProps) {
             d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
           />
         </svg>
-        <span>Transcribing with WhisperAPI...</span>
+        <span>Transcribing with Audiscribe...</span>
       </div>
     </div>
   );
@@ -699,7 +699,7 @@ export default function Home() {
           Audio Transcription App
         </h1>
         <p className="text-center text-gray-600 mb-12">
-          Powered by WhisperAPI - Fast, accurate, and easy to use
+          Powered by Audiscribe - Fast, accurate, and easy to use
         </p>
 
         <FileUpload onFileSelect={handleFileSelect} disabled={isProcessing} />
@@ -908,7 +908,7 @@ Long audio files may exceed default timeout settings.
 **Solution:** Increase timeout in axios client and Express:
 
 ```javascript
-// In WhisperAPI client
+// In Audiscribe client
 const client = axios.create({
   timeout: 600000 // 10 minutes for very long files
 });
@@ -997,8 +997,8 @@ npm install express multer axios dotenv cors
 
 ```javascript
 // Use correct relative paths
-const WhisperAPIClient = require('./utils/whisperapi'); // ✅
-const WhisperAPIClient = require('utils/whisperapi');   // ❌
+const AudiscribeClient = require('./utils/whisperapi'); // ✅
+const AudiscribeClient = require('utils/whisperapi');   // ❌
 ```
 
 3. **Ensure you're in the correct directory:**
@@ -1203,7 +1203,7 @@ app.post('/api/transcribe-stream', async (req, res) => {
   form.append('file', stream);
 
   const response = await axios.post(
-    'https://api.whisperapi.com/v1/transcriptions',
+    'https://api.audiscribe.com/v1/transcriptions',
     form,
     {
       headers: {
@@ -1291,7 +1291,7 @@ ffmpeg -i input.mp3 -ar 16000 -ac 1 -c:a pcm_s16le output.wav
 
 ```javascript
 formData.append('custom_vocabulary', JSON.stringify([
-  'WhisperAPI', 'API', 'transcription', 'React', 'Node.js'
+  'Audiscribe', 'API', 'transcription', 'React', 'Node.js'
 ]));
 ```
 
@@ -1320,7 +1320,7 @@ formData.append('diarization', 'true');
 
 Still stuck? Here's how to get help:
 
-1. **Check the [WhisperAPI Documentation](/docs)** - Comprehensive guides and API reference
+1. **Check the [Audiscribe Documentation](/docs)** - Comprehensive guides and API reference
 2. **Visit [GitHub Issues](https://github.com/whisperapi/transcription-app-tutorial/issues)** - See solutions to common problems
 3. **Join our [Discord Community](https://discord.gg/whisperapi)** - Get help from other developers
 4. **Contact [Support](/support)** - Our team typically responds within 24 hours
@@ -1359,7 +1359,7 @@ app.use((req, res, next) => {
       <svg className="w-5 h-5 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
       </svg>
-      <span><strong>Accurate transcription</strong> with WhisperAPI's advanced speech recognition</span>
+      <span><strong>Accurate transcription</strong> with Audiscribe's advanced speech recognition</span>
     </li>
     <li className="flex items-start">
       <svg className="w-5 h-5 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
@@ -1399,13 +1399,13 @@ app.use((req, res, next) => {
 
 ## Conclusion
 
-The best part? This is just the beginning. WhisperAPI's powerful features make it easy to add advanced capabilities like real-time transcription, translation, and AI-powered insights to your application.
+The best part? This is just the beginning. Audiscribe's powerful features make it easy to add advanced capabilities like real-time transcription, translation, and AI-powered insights to your application.
 
 ## Your Next Steps
 
 Now that you have a working transcription app, here are some ways to enhance it further:
 
-1. **Try the live demo:** Experience a production version at [demo.whisperapi.com](https://demo.whisperapi.com)
+1. **Try the live demo:** Experience a production version at [demo.audiscribe.com](https://demo.audiscribe.com)
 2. **Clone the repo:** Get the complete source code from [GitHub](https://github.com/whisperapi/transcription-app-tutorial)
 3. **Explore the API:** Read our [comprehensive documentation](/docs) to discover more features
 4. **Join the community:** Connect with other developers on [Discord](https://discord.gg/whisperapi)
@@ -1441,14 +1441,14 @@ Now that you have a working transcription app, here are some ways to enhance it 
 
 - **Complete source code:** [GitHub Repository](https://github.com/whisperapi/transcription-app-tutorial)
 - **Video tutorial:** [Watch on YouTube](https://youtube.com/watch?v=placeholder)
-- **API documentation:** [WhisperAPI Docs](/docs)
+- **API documentation:** [Audiscribe Docs](/docs)
 - **Community support:** [Discord Community](https://discord.gg/whisperapi)
-- **Example demos:** [Live Demo](https://demo.whisperapi.com)
+- **Example demos:** [Live Demo](https://demo.audiscribe.com)
 - **Blog posts:** [More tutorials](/blog) on advanced topics
 
 ## Ready to Build Your Own App?
 
-Get started with WhisperAPI today and add professional-grade transcription to your applications. No infrastructure management, no model training, no complex setup—just a simple API that works.
+Get started with Audiscribe today and add professional-grade transcription to your applications. No infrastructure management, no model training, no complex setup—just a simple API that works.
 
 <div className="my-8 p-6 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg text-white text-center shadow-2xl">
   <h3 className="text-2xl font-bold mb-2">Start Building Your Transcription App Today</h3>
@@ -1460,10 +1460,10 @@ Get started with WhisperAPI today and add professional-grade transcription to yo
     Get Your Free API Key →
   </a>
   <p className="mt-4 text-sm text-blue-100">
-    Join 10,000+ developers building with WhisperAPI
+    Join 10,000+ developers building with Audiscribe
   </p>
 </div>
 
 ---
 
-*Have questions or want to share what you built? Tweet us [@WhisperAPI](https://twitter.com/whisperapi) or join our [Discord community](https://discord.gg/whisperapi).*
+*Have questions or want to share what you built? Tweet us [@Audiscribe](https://twitter.com/whisperapi) or join our [Discord community](https://discord.gg/whisperapi).*

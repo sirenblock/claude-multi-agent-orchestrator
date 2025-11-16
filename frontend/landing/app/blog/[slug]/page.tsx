@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   return {
-    title: `${post.title} | WhisperAPI Blog`,
+    title: `${post.title} | Audiscribe Blog`,
     description: post.excerpt,
     openGraph: {
       title: post.title,
@@ -137,10 +137,10 @@ export default function BlogPostPage({ params }: Props) {
             <div className="mt-16 p-10 bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 rounded-2xl text-white text-center shadow-xl">
               <div className="max-w-2xl mx-auto">
                 <h3 className="text-3xl font-bold mb-4">
-                  Ready to try WhisperAPI?
+                  Ready to try Audiscribe?
                 </h3>
                 <p className="text-lg text-blue-100 mb-8 leading-relaxed">
-                  Start transcribing audio with our powerful API. Get 60 minutes free every month with no credit card required.
+                  Start transcribing audio with our lightning-fast API. Get 60 minutes free every month with no credit card required.
                 </p>
                 <Link
                   href="/signup"
