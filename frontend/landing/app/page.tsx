@@ -1,6 +1,6 @@
 /**
  * @module HomePage
- * @description Main landing page for Audiscribe
+ * @description Main landing page for Audioscribe
  *
  * Integrates:
  * - Hero section with value proposition
@@ -46,7 +46,7 @@ export default function HomePage() {
       <Features />
 
       {/* Inline CTA 1 - After Features */}
-      <InlineCTA variant="minimal" description="See how easy it is to integrate Audiscribe" />
+      <InlineCTA variant="minimal" description="See how easy it is to integrate Audioscribe" />
 
       {/* Features Grid */}
       <FeaturesGrid />
@@ -72,7 +72,7 @@ export default function HomePage() {
               See It In Action
             </h2>
             <p className="text-xl text-gray-600">
-              Watch how fast Audiscribe transcribes audio
+              Watch how fast Audioscribe transcribes audio
             </p>
           </div>
 
@@ -118,7 +118,7 @@ export default function HomePage() {
       <InlineCTA
         variant="highlight"
         title="80% Cheaper Than Competitors"
-        description="See why thousands of developers are switching to Audiscribe"
+        description="See why thousands of developers are switching to Audioscribe"
       />
 
       {/* Pricing Table */}
@@ -154,7 +154,7 @@ export default function HomePage() {
               Ready to Get Started?
             </h2>
             <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
-              Join thousands of developers using Audiscribe for fast, affordable transcription
+              Join thousands of developers using Audioscribe for fast, affordable transcription
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link

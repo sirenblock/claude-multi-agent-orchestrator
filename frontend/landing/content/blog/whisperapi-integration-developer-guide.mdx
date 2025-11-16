@@ -1,37 +1,37 @@
 ---
-title: "Audiscribe Integration: Complete Developer Guide for 2025"
-description: "Comprehensive developer guide for integrating Audiscribe. Learn authentication, SDKs, webhooks, error handling, and production best practices with complete code examples."
+title: "Audioscribe Integration: Complete Developer Guide for 2025"
+description: "Comprehensive developer guide for integrating Audioscribe. Learn authentication, SDKs, webhooks, error handling, and production best practices with complete code examples."
 date: "2024-01-20"
-author: "Audiscribe Team"
+author: "Audioscribe Team"
 category: "Developer Guide"
 tags: ["whisperapi integration", "developer guide", "api integration", "webhooks", "sdk", "authentication"]
 readingTime: "12 min read"
 image: "/blog/whisperapi-integration-guide-cover.jpg"
 featured: true
 seo:
-  metaTitle: "Audiscribe Integration Guide: Authentication, SDKs & Webhooks | Complete Developer Guide"
-  metaDescription: "Master Audiscribe integration with this comprehensive developer guide. Includes authentication, SDKs for Python/Node.js/Ruby, webhooks, error handling, and production deployment."
+  metaTitle: "Audioscribe Integration Guide: Authentication, SDKs & Webhooks | Complete Developer Guide"
+  metaDescription: "Master Audioscribe integration with this comprehensive developer guide. Includes authentication, SDKs for Python/Node.js/Ruby, webhooks, error handling, and production deployment."
   keywords: "whisperapi integration, api integration guide, whisper api authentication, webhook integration, sdk integration, audio transcription api"
   ogImage: "/blog/whisperapi-integration-guide-og.jpg"
   ogType: "article"
   twitterCard: "summary_large_image"
 ---
 
-# Audiscribe Integration: Complete Developer Guide for 2025
+# Audioscribe Integration: Complete Developer Guide for 2025
 
-Integrating audio transcription capabilities into your application doesn't have to be complicated. Audiscribe provides a robust, enterprise-grade API that makes it simple to add state-of-the-art speech recognition to any application. This comprehensive developer guide will walk you through everything you need to know to successfully integrate Audiscribe, from initial authentication to production deployment.
+Integrating audio transcription capabilities into your application doesn't have to be complicated. Audioscribe provides a robust, enterprise-grade API that makes it simple to add state-of-the-art speech recognition to any application. This comprehensive developer guide will walk you through everything you need to know to successfully integrate Audioscribe, from initial authentication to production deployment.
 
 Whether you're building a podcast platform, meeting transcription tool, content management system, or any application that processes audio, this guide provides the complete technical foundation you need. We'll cover authentication strategies, SDK implementation across multiple languages, webhook configuration for async processing, error handling best practices, rate limiting strategies, and production deployment considerations.
 
-By the end of this guide, you'll have a deep understanding of Audiscribe integration patterns and be ready to deploy transcription capabilities that scale with your application's growth.
+By the end of this guide, you'll have a deep understanding of Audioscribe integration patterns and be ready to deploy transcription capabilities that scale with your application's growth.
 
 ## Authentication and API Keys
 
-Audiscribe uses API key authentication to secure all API requests. This section covers how to obtain, manage, and implement authentication in your applications.
+Audioscribe uses API key authentication to secure all API requests. This section covers how to obtain, manage, and implement authentication in your applications.
 
 ### Obtaining Your API Key
 
-1. **Sign up** for a Audiscribe account at [audiscribe.com/signup](/signup)
+1. **Sign up** for a Audioscribe account at [audiscribe.com/signup](/signup)
 2. Navigate to your **Dashboard** → **API Keys**
 3. Click **"Generate New API Key"**
 4. Copy your API key immediately (it's only shown once)
@@ -47,7 +47,7 @@ Audiscribe uses API key authentication to secure all API requests. This section 
 
 ### Authentication Methods
 
-Audiscribe supports authentication through HTTP headers. Include your API key in the `Authorization` header with the `Bearer` scheme:
+Audioscribe supports authentication through HTTP headers. Include your API key in the `Authorization` header with the `Bearer` scheme:
 
 ```bash
 # cURL example
@@ -116,7 +116,7 @@ Successful response:
 
 ## SDK Documentation
 
-Audiscribe provides official SDKs for Python, Node.js, and Ruby. These SDKs handle authentication, error handling, retries, and provide type safety for a superior developer experience.
+Audioscribe provides official SDKs for Python, Node.js, and Ruby. These SDKs handle authentication, error handling, retries, and provide type safety for a superior developer experience.
 
 ### Python SDK
 
@@ -129,10 +129,10 @@ pip install whisperapi-python
 #### Basic Usage
 
 ```python
-from whisperapi import Audiscribe
+from whisperapi import Audioscribe
 
 # Initialize client
-client = Audiscribe(api_key="YOUR_API_KEY")
+client = Audioscribe(api_key="YOUR_API_KEY")
 
 # Transcribe audio file
 with open("audio.mp3", "rb") as audio_file:
@@ -209,11 +209,11 @@ npm install whisperapi-node
 #### Basic Usage
 
 ```javascript
-const Audiscribe = require('whisperapi-node');
+const Audioscribe = require('whisperapi-node');
 const fs = require('fs');
 
 // Initialize client
-const client = new Audiscribe({
+const client = new Audioscribe({
   apiKey: process.env.WHISPERAPI_KEY
 });
 
@@ -243,12 +243,12 @@ transcribeAudio();
 #### TypeScript Support
 
 ```typescript
-import Audiscribe, {
+import Audioscribe, {
   TranscriptionOptions,
   TranscriptionResult
 } from 'whisperapi-node';
 
-const client = new Audiscribe({
+const client = new Audioscribe({
   apiKey: process.env.WHISPERAPI_KEY!
 });
 
@@ -323,7 +323,7 @@ gem install whisperapi-ruby
 require 'whisperapi'
 
 # Initialize client
-client = Audiscribe::Client.new(api_key: ENV['WHISPERAPI_KEY'])
+client = Audioscribe::Client.new(api_key: ENV['WHISPERAPI_KEY'])
 
 # Transcribe audio file
 File.open('audio.mp3', 'rb') do |audio_file|
@@ -370,15 +370,15 @@ puts "Status: #{job.status}"
 ```ruby
 begin
   transcription = client.transcribe(file: audio_file)
-rescue Audiscribe::AuthenticationError => e
+rescue Audioscribe::AuthenticationError => e
   puts "Authentication failed: #{e.message}"
-rescue Audiscribe::RateLimitError => e
+rescue Audioscribe::RateLimitError => e
   puts "Rate limit exceeded. Retry after: #{e.retry_after}s"
   sleep(e.retry_after)
   retry
-rescue Audiscribe::InvalidFileError => e
+rescue Audioscribe::InvalidFileError => e
   puts "Invalid file: #{e.message}"
-rescue Audiscribe::TranscriptionError => e
+rescue Audioscribe::TranscriptionError => e
   puts "Transcription failed: #{e.message}"
 end
 ```
@@ -494,7 +494,7 @@ def verify_webhook_signature(payload, signature):
 @app.route('/webhooks/transcription', methods=['POST'])
 def handle_webhook():
     # Get signature from header
-    signature = request.headers.get('X-Audiscribe-Signature')
+    signature = request.headers.get('X-Audioscribe-Signature')
     payload = request.get_data(as_text=True)
 
     # Verify signature
@@ -610,7 +610,7 @@ if __name__ == '__main__':
 
 1. **Respond quickly**: Always return 200 OK within 5 seconds
 2. **Process asynchronously**: Queue webhook processing for later
-3. **Handle retries**: Audiscribe retries failed webhooks with exponential backoff
+3. **Handle retries**: Audioscribe retries failed webhooks with exponential backoff
 4. **Verify signatures**: Always validate the webhook signature
 5. **Idempotency**: Use job_id to prevent duplicate processing
 6. **Log everything**: Maintain audit logs of all webhook events
@@ -766,7 +766,7 @@ def transcribe_audio(file_path):
 
 ## Rate Limiting and Optimization
 
-Audiscribe implements rate limiting to ensure fair usage and system stability. Understanding and working within these limits is crucial for production applications.
+Audioscribe implements rate limiting to ensure fair usage and system stability. Understanding and working within these limits is crucial for production applications.
 
 ### Rate Limit Tiers
 
@@ -895,7 +895,7 @@ async function batchTranscribe(files, batchSize = 5) {
 
 ## Production Deployment Checklist
 
-Ensure your Audiscribe integration is production-ready with this comprehensive checklist.
+Ensure your Audioscribe integration is production-ready with this comprehensive checklist.
 
 ### Security
 
@@ -952,7 +952,7 @@ Ensure your Audiscribe integration is production-ready with this comprehensive c
 
 ### File Optimization
 
-Before sending audio to Audiscribe, optimize files for faster processing:
+Before sending audio to Audioscribe, optimize files for faster processing:
 
 ```bash
 # Convert to optimal format (MP3, 64kbps)
@@ -1006,7 +1006,7 @@ async function transcribeWithCache(audioFile) {
 - Use webhooks for long files to avoid timeout retries
 - Monitor and optimize your transcription volume
 
-Ready to integrate Audiscribe into your application? [Get your API key now](/signup) and start transcribing in minutes. Need help? Our [support team](/support) is available 24/7, and you can find more code examples in our [GitHub repository](https://github.com/whisperapi/examples).
+Ready to integrate Audioscribe into your application? [Get your API key now](/signup) and start transcribing in minutes. Need help? Our [support team](/support) is available 24/7, and you can find more code examples in our [GitHub repository](https://github.com/whisperapi/examples).
 
 For advanced use cases like real-time transcription, custom vocabulary, or enterprise deployments, [contact our solutions team](/contact) to discuss your specific requirements.
 
@@ -1018,4 +1018,4 @@ For advanced use cases like real-time transcription, custom vocabulary, or enter
 - **[Community Forum](https://community.audiscribe.com)**: Get help from developers
 - **[Status Page](https://status.audiscribe.com)**: Monitor API uptime
 
-Start building with Audiscribe today and transform how your application handles audio transcription. With enterprise-grade accuracy, comprehensive SDKs, and straightforward integration, you'll be processing audio in production faster than you ever thought possible.
+Start building with Audioscribe today and transform how your application handles audio transcription. With enterprise-grade accuracy, comprehensive SDKs, and straightforward integration, you'll be processing audio in production faster than you ever thought possible.

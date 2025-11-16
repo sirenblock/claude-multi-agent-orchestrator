@@ -1,7 +1,7 @@
 {
-  "name": "audiscribe-landing",
+  "name": "audioscribe-landing",
   "version": "1.0.0",
-  "description": "Audiscribe Landing Page - Conversion-focused marketing site",
+  "description": "Audioscribe Landing Page - Conversion-focused marketing site",
   "private": true,
   "scripts": {
     "dev": "next dev -p 3002",

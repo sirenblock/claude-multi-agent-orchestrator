@@ -4,8 +4,8 @@ import { blogPosts } from '@/lib/blogData';
 import { Clock, Calendar, ArrowRight, Tag } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Blog - Audiscribe | Audio Transcription Guides & Tutorials',
-  description: 'Learn about audio transcription APIs, speech-to-text technology, and how to integrate Audiscribe into your applications.',
+  title: 'Blog - Audioscribe | Audio Transcription Guides & Tutorials',
+  description: 'Learn about audio transcription APIs, speech-to-text technology, and how to integrate Audioscribe into your applications.',
 };
 
 export default function BlogPage() {
@@ -16,7 +16,7 @@ export default function BlogPage() {
         <div className="section-container">
           <div className="max-w-4xl mx-auto text-center text-white">
             <h1 className="text-5xl md:text-6xl font-bold mb-6">
-              Audiscribe Blog
+              Audioscribe Blog
             </h1>
             <p className="text-xl text-blue-100">
               Guides, tutorials, and insights about audio transcription APIs
